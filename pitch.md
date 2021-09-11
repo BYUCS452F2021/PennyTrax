@@ -1,4 +1,4 @@
-﻿pitch.md# PennyTrax
+﻿# PennyTrax
 An app to track and budget your personal finances
 
 ## Project Description
@@ -20,7 +20,7 @@ We plan to implement the MVP using an SQL and then migrating to a NoSQL.
 We do not have a relation database selected yet. We might possibly use MySQL.
 
 ### NoSQL
-We are open to recommendations and will be researching best options.
+We are open to recommendations and will be researching best options for a NoSQL database.
 
 ## Bolts
 
