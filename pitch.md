@@ -20,7 +20,7 @@ We plan to implement the MVP using an SQL and then migrating to a NoSQL.
 We do not have a relation database selected yet. We might possibly use MySQL.
 
 ### NoSQL
-We are open to recommendations and will be researching best options for a NoSQL database.
+We are open to recommendations and will be researching best options for a NoSQL database. We will most likely use a key-value NoSQL database though.
 
 ## Bolts
 
