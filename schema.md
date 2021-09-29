@@ -46,7 +46,7 @@ Financial transactions performed by users, either pulled from the financial data
 - category: (External key from API: category): the category of the transaction. The user will be able to modify this value.
 - notes: (user-defined notes; defaults to NULL)
 - split: (bool) This indicates whether or not a transaction was split into multiple categories
-- parent_transaction_id: (Recursive foreign key; can be NULL) Another transaction from which the current transaction was split
+- **parent_transaction_id**: (Recursive foreign key; can be NULL) Another transaction from which the current transaction was split
 - hidden_from_budget: Indicates whether or not to include amount in budget limit and spending chart by category
 
 ### Budget
