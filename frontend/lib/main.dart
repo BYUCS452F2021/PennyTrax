@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -45,6 +46,19 @@ class MyHomePage extends StatefulWidget {
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class LoginRoute extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Simple Login Page',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: LoginPage(),
+    );
+  }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -106,9 +120,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginRoute()),
+          );
+        }
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
