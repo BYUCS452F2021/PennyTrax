@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/register_page.dart';
+import 'package:frontend/login_page.dart';
+import 'package:frontend/main.dart';
 
-class LoginRoute extends StatelessWidget {
+class RegisterRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Simple Login Page',
+      title: 'Flutter Simple Register Page',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: RegisterPage(),
     );
   }
 }
 
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final logo = Padding(
@@ -29,6 +30,32 @@ class _LoginPageState extends State<LoginPage> {
           radius: 56.0,
           child: Image.asset('assets/PennyTrax.png'),
         )
+      ),
+    );
+    final inputFirstName = Padding(
+      padding: EdgeInsets.only(bottom: 10),
+      child: TextField(
+        keyboardType: TextInputType.emailAddress,
+        decoration: InputDecoration(
+          hintText: 'First name',
+          contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(50.0)
+          )
+        ),
+      ),
+    );
+    final inputLastName = Padding(
+      padding: EdgeInsets.only(bottom: 10),
+      child: TextField(
+        keyboardType: TextInputType.emailAddress,
+        decoration: InputDecoration(
+          hintText: 'Last name',
+          contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(50.0)
+          )
+        ),
       ),
     );
     final inputEmail = Padding(
@@ -58,12 +85,12 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-    final buttonLogin = Padding(
+    final buttonRegister = Padding(
       padding: EdgeInsets.only(bottom: 5),
       child: ButtonTheme(
         height: 56,
         child: RaisedButton(
-          child: Text('Login', style: TextStyle(color: Colors.white, fontSize: 20)),
+          child: Text('Register', style: TextStyle(color: Colors.white, fontSize: 20)),
           color: Colors.black87,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50)
@@ -74,12 +101,12 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-    final buttonRegister = FlatButton(
-      child: Text('Don\'t have an account? Register here', style: TextStyle(color: Colors.grey, fontSize: 16),),
+    final buttonLogin = FlatButton(
+      child: Text('Already have an account? Log in here', style: TextStyle(color: Colors.grey, fontSize: 16),),
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => RegisterRoute()),
+          MaterialPageRoute(builder: (context) => LoginRoute()),
         );
       }
     );
@@ -91,10 +118,12 @@ class _LoginPageState extends State<LoginPage> {
             padding: EdgeInsets.symmetric(horizontal: 20),
             children: <Widget>[
               logo,
+              inputFirstName,
+              inputLastName,
               inputEmail,
               inputPassword,
-              buttonLogin,
-              buttonRegister
+              buttonRegister,
+              buttonLogin
             ],
           ),
         ),

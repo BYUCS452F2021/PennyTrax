@@ -48,18 +48,6 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class LoginRoute extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Simple Login Page',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: LoginPage(),
-    );
-  }
-}
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
