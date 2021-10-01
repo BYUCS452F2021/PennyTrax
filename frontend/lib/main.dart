@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/accounts.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(Accounts());
 }
 
 class MyApp extends StatelessWidget {
