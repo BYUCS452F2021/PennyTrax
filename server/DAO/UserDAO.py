@@ -23,25 +23,26 @@ mock_data = [
 ]
 
 
-def create_user(user_data):
-    next_id = max([x["id"] for x in mock_data]) + 1
-    print(next_id)
-    user_data["id"] = next_id
-    mock_data.append(user_data)
+class UserDAO:
+    def __init__(self):
+        # Init DB connection
+        pass
 
+    def create_user(self, user_data):
+        next_id = max([x["id"] for x in mock_data]) + 1
+        print(next_id)
+        user_data["id"] = next_id
+        mock_data.append(user_data)
 
-def get_user(user_id):
-    user = next((x for x in mock_data if x["id"] == user_id), None)
-    return user
+    def get_user(self, user_id):
+        user = next((x for x in mock_data if x["id"] == user_id), None)
+        return user
 
+    def get_all_users(self):
+        return mock_data
 
-def get_all_users():
-    return mock_data
+    def update_user(self, user_id, user_info):
+        pass
 
-
-def update_user(user_id, user_info):
-    pass
-
-
-def delete_user(user_id):
-    pass
+    def delete_user(self, user_id):
+        pass
