@@ -30,9 +30,13 @@ def create_user(user_data):
     mock_data.append(user_data)
 
 
-def read_user(user_id):
+def get_user(user_id):
     user = next((x for x in mock_data if x["id"] == user_id), None)
     return user
+
+
+def get_all_users():
+    return mock_data
 
 
 def update_user(user_id, user_info):

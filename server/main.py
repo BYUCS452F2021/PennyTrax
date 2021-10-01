@@ -10,9 +10,14 @@ async def root():
     return {"message": "Hello World"}
 
 
+@app.get("/users/")
+async def get_all_users():
+    return userDAO.get_all_users()
+
+
 @app.get("/users/{user_id}")
-async def read_user(user_id: int):
-    return userDAO.read_user(int(user_id))
+async def get_user(user_id: int):
+    return userDAO.get_user(int(user_id))
 
 
 class RegisterRequest(BaseModel):
