@@ -27,7 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
         child: Hero(
         tag: 'hero',
         child: CircleAvatar(
-          radius: 56.0,
+          radius: 100.0,
           child: Image.asset('assets/PennyTrax.png'),
         )
       ),
