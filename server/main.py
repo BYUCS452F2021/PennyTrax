@@ -22,7 +22,7 @@ async def get_user(user_id: int):
     return dao.get_user(int(user_id))
 
 
-@app.post("/register")
+@app.post("/register/")
 async def register(request: data_models.RegisterRequest):
     dao = UserDAO()
     try:
@@ -35,5 +35,17 @@ async def register(request: data_models.RegisterRequest):
         })
     except Exception:
         raise HTTPException(status_code=500, detail="Registration failed")
+    else:
+        return {"success": True}
+
+
+@app.post("/login/")
+async def login(request: data_models.LoginRequest):
+    dao = UserDAO()
+    user = dao.get_user_by_email(request.email)
+    if user == None:
+        return {"success": False, "message": "Username does not exist"}
+    elif user["password"] != request.password:
+        return {"success": False, "message": "Password is incorrect"}
     else:
         return {"success": True}

@@ -7,3 +7,8 @@ class RegisterRequest(BaseModel):
     email: str
     password: str
     salt: str
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str

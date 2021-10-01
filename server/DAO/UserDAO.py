@@ -34,15 +34,19 @@ class UserDAO:
         user_data["id"] = next_id
         mock_data.append(user_data)
 
-    def get_user(self, user_id):
-        user = next((x for x in mock_data if x["id"] == user_id), None)
+    def get_user(self, id):
+        user = next((x for x in mock_data if x["id"] == id), None)
+        return user
+
+    def get_user_by_email(self, email):
+        user = next((x for x in mock_data if x["email"] == email), None)
         return user
 
     def get_all_users(self):
         return mock_data
 
-    def update_user(self, user_id, user_info):
+    def update_user(self, id, user_info):
         pass
 
-    def delete_user(self, user_id):
+    def delete_user(self, id):
         pass
