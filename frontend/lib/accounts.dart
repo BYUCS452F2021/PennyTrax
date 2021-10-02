@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
+
+Future<http.Response> fetchAlbum() {
+  return http.post(Uri.parse('https://localhost:8000/institutions/add/'));
+}
 
 
 _launchURLBrowser() async {
@@ -32,7 +37,6 @@ class Accounts extends StatelessWidget {
         appBar: AppBar(
           title: const Text(title),
           actions: const <Widget>[
-            // First button - decrement
             IconButton(
               icon: Icon(Icons.add), 
               onPressed: _launchURLBrowser,
@@ -40,10 +44,9 @@ class Accounts extends StatelessWidget {
           ],
         ),
         body: GridView.count(
-          // Create a grid with 2 columns. If you change the scrollDirection to
-          // horizontal, this produces 2 rows.
+          // Number of columns
           crossAxisCount: 1,
-          // Generate 100 widgets that display their index in the List.
+          // Generate list of widgets 
           children: List.generate(100, (index) {
             return Center(
               child: Text(
