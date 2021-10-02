@@ -56,6 +56,9 @@ async def add_institution():
 
 @app.get("/link/begin/{link_token}")
 async def begin_link(link_token: str):
+    """Returns HTML content to be viewed in a web browser:
+    A page where the end-user can sign in to a supported financial institution.
+    """
     # TODO: get user auth token from http headers
     # determine the user id from that token
     user_id = 101
@@ -64,10 +67,19 @@ async def begin_link(link_token: str):
 
 @app.get("/link/done")
 async def link_done_page():
+    """Returns HTML content to be viewed in a web browser:
+    A landing page that informs the user that the process was successful.
+    Ideally this is not shown at all (the front end should realize that
+    the browser navigated, and take the user back to the previous page)
+    """
     return Response(content=link.get_done_html())
 
 @app.post("/link/store_token")
 async def link_store_token(data: data_models.PlaidSignInResult):
+    """To be invoked from the HTML sign-in page; this function
+    exchanges a public token retrieved from the sign-in page for
+    an auth token and stores it in the database with a user ID.
+    """
     print("Got Public Token", data.public_token, "for user", data.user_id)
     access_token = await plaid.get_access_token(data.public_token)
     print("Exchanged for Access Token:", access_token)
