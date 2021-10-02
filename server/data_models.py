@@ -11,4 +11,5 @@ class Account(BaseModel):
     current_balance: float
 
 class PlaidSignInResult(BaseModel):
+    user_id: int
     public_token: str

@@ -1,2 +1,4 @@
 .DS_Store
-.env
+.env\
+server/DAO/__pycache__
+server/__pycache__
