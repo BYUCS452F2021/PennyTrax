@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/accounts.dart';
+import 'package:frontend/view/accounts.dart';
 
 void main() {
-  runApp(Accounts());
+  runApp(const MaterialApp(
+    title: 'PennyTrax',
+    home: Accounts(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -12,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'PennyTrax',
       theme: ThemeData(
         // This is the theme of your application.
         //
