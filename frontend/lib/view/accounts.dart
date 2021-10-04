@@ -81,56 +81,44 @@ Widget accountCard(index) {
                           Expanded(child: Divider()),
                         ],
                       ),
-                      Row(
-                        children: const <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(left: 15, top: 15),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 5, right: 10, top: 15),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [
+                              Text(
                                 "Savings (...8629)",
                                 style: TextStyle(fontSize: 17),
                               ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 100, top: 15),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
+                              Text(
                                 "\$ 7,231.34",
                                 style: TextStyle(
-                                    fontSize: 17, color: Colors.green),
+                                  fontSize: 17,
+                                  color: Colors.green,
+                                ),
                               ),
-                            ),
-                          )
-                        ],
+                            ]),
                       ),
-                      Row(
-                        children: const <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(left: 15, top: 15),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 5, right: 10, top: 15),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: const [
+                              Text(
                                 "Checking (...3291)",
                                 style: TextStyle(fontSize: 17),
                               ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 100, top: 15),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "\$ 2,421.16",
+                              Text(
+                                "\$ 2,314.27",
                                 style: TextStyle(
-                                    fontSize: 17, color: Colors.green),
+                                  fontSize: 17,
+                                  color: Colors.green,
+                                ),
                               ),
-                            ),
-                          )
-                        ],
-                      )
+                            ]),
+                      ),
                     ],
                   ),
                 )
