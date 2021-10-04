@@ -4,18 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:frontend/model/institution_link_response.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:url_launcher/url_launcher.dart';
+//import 'dart:html' as html;
 
 _launchURLBrowser(url) async {
   if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
-}
-
-_launchURLApp(url) async {
-  if (await canLaunch(url)) {
-    await launch(url, forceSafariVC: true, forceWebView: true);
+    await launch(url, forceWebView: true);
+    //html.window.open(url, "Add Institution");
   } else {
     throw 'Could not launch $url';
   }
