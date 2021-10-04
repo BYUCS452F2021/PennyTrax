@@ -32,12 +32,12 @@ async def read_user(user_id):
 @app.get("/accounts")
 async def get_accounts():
     dao = AccountDAO()
-    return dao.get_accounts()
+    return dao.get_institutions_accounts()
 
-@app.get("/accounts/{id}")
-async def get_account(id):
-    dao = AccountDAO()
-    return dao.get_accounts(id=int(id))
+# @app.get("/accounts/{id}")
+# async def get_account(id):
+#     dao = AccountDAO()
+#     return dao.get_accounts(id=int(id))
 
 # NOTE: make sure you're including the header "Content-Type: application/json"
 @app.post("/accounts/add")
