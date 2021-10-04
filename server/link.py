@@ -7,6 +7,7 @@ def get_link_html(user_id, link_token):
     return """
     <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- <h1>Plaid API Demo</h1> -->
         <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -60,8 +61,23 @@ def get_link_html(user_id, link_token):
 def get_done_html():
     return """
     <html>
-        <h1>Your account has been linked!</h1>
-        <p>The app will automatically detect that the process is complete
-        and redirect you back to the accounts page.</p>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+        body { font-family: Arial; color: white; text-align: center }
+        p { font-familiy: Arial; color: lightgray }
+        body { background-color: #3a435e }
+        </style>
+      </head>
+      <body>
+        <br />
+        <h1>PennyTrax</h1>
+        <h2>Your account has been linked!</h2>
+        <p>Please click 'Done' to navigate back to the app.</p>
+        <script>
+          // Should close itself out - doesn't seem to work in iOS.
+          window.close();
+        </script>
+      </body>
     </html>
     """
