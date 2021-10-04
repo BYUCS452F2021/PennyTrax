@@ -5,6 +5,7 @@ void main() {
   runApp(const MaterialApp(
     title: 'PennyTrax',
     home: Accounts(),
+    debugShowCheckedModeBanner: false,
   ));
 }
 
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
