@@ -9,7 +9,6 @@ class ServerFacade {
 
   /*
   * Gets link url from server
-  * Returns link url
   */
   static Future<InstitutionLinkResponse> addInstitution() async {
     final response = await http.post(Uri.parse(serverURL + 'institutions/add'));
@@ -18,6 +17,19 @@ class ServerFacade {
       return InstitutionLinkResponse.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to retrieve institution link response');
+    }
+  }
+
+  /*
+  * Gets all accounts for a user
+  */
+  static Future<dynamic> getAccounts() async {
+    final response = await http.get(Uri.parse(serverURL + 'accounts'));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to retrieve accounts response');
     }
   }
 }

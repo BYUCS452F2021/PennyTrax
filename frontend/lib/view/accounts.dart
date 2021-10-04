@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/model/institution_link_response.dart';
+import 'package:frontend/network/server_facade.dart';
 import 'package:frontend/view/add_institution.dart';
 
 class Accounts extends StatefulWidget {
@@ -10,11 +10,12 @@ class Accounts extends StatefulWidget {
 }
 
 class _AccountsState extends State<Accounts> {
-  late Future<InstitutionLinkResponse> futureLinkResponse;
+  late Future<dynamic> futureGetAccountsResponse = ServerFacade.getAccounts();
 
   @override
   void initState() {
     super.initState();
+    futureGetAccountsResponse = ServerFacade.getAccounts();
   }
 
   @override
@@ -34,25 +35,38 @@ class _AccountsState extends State<Accounts> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: 3,
-        itemBuilder: (context, index) {
-          return accountCard(index);
-        },
+      body: Center(
+        child: FutureBuilder<dynamic>(
+          future: futureGetAccountsResponse,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  return institutionCard(snapshot.data[index]);
+                },
+              );
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            }
+            // By default, show a loading spinner.
+            return const CircularProgressIndicator();
+          },
+        ),
       ),
     );
   }
 }
 
-Widget accountCard(index) {
+Container institutionCard(institution) {
   return Container(
-    padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-    height: 180,
+    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+    height: (110 + (institution["accounts"].length * 35)).toDouble(),
     width: double.maxFinite,
     child: Card(
       elevation: 7,
       child: Padding(
-        padding: EdgeInsets.all(7),
+        padding: const EdgeInsets.all(7),
         child: Stack(children: <Widget>[
           Align(
             alignment: Alignment.centerRight,
@@ -65,12 +79,12 @@ Widget accountCard(index) {
                       Row(
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.only(left: 15, top: 5),
+                            padding: const EdgeInsets.only(left: 15, top: 5),
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                'Your Bank ${index + 1}',
-                                style: TextStyle(fontSize: 25),
+                                '${institution["financial_institution_name"]}',
+                                style: const TextStyle(fontSize: 25),
                               ),
                             ),
                           )
@@ -81,44 +95,8 @@ Widget accountCard(index) {
                           Expanded(child: Divider()),
                         ],
                       ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 5, right: 10, top: 15),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
-                              Text(
-                                "Savings (...8629)",
-                                style: TextStyle(fontSize: 17),
-                              ),
-                              Text(
-                                "\$ 7,231.34",
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ]),
-                      ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 5, right: 10, top: 15),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
-                              Text(
-                                "Checking (...3291)",
-                                style: TextStyle(fontSize: 17),
-                              ),
-                              Text(
-                                "\$ 2,314.27",
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ]),
-                      ),
+                      for (var account in institution["accounts"])
+                        accountRow(account)
                     ],
                   ),
                 )
@@ -129,4 +107,40 @@ Widget accountCard(index) {
       ),
     ),
   );
+}
+
+Widget accountRow(account) {
+  return Padding(
+    padding: const EdgeInsets.only(left: 5, right: 10, top: 15),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          '${account["name"]} (...${account["mask"]})',
+          style: const TextStyle(fontSize: 17),
+        ),
+        accountAmount(account),
+      ],
+    ),
+  );
+}
+
+Widget accountAmount(account) {
+  if (account["type"] == "loan") {
+    return Text(
+      '- \$ ${account["current_balance"]}',
+      style: const TextStyle(
+        fontSize: 17,
+        color: Colors.red,
+      ),
+    );
+  } else {
+    return Text(
+      '\$ ${account["current_balance"]}',
+      style: const TextStyle(
+        fontSize: 17,
+        color: Colors.green,
+      ),
+    );
+  }
 }
