@@ -26,18 +26,14 @@ async def get_user(user_id: int):
 @app.post("/register/")
 async def register(request: data_models.RegisterRequest):
     dao = UserDAO()
-    try:
-        dao.create_user({
-            "first_name": request.first_name,
-            "last_name": request.last_name,
-            "email": request.email,
-            "password": request.password,
-            "salt": request.salt
-        })
-    except Exception:
-        raise HTTPException(status_code=500, detail="Registration failed")
-    else:
-        return {"success": True}
+    dao.create_user({
+        "first_name": request.first_name,
+        "last_name": request.last_name,
+        "email": request.email,
+        "password": request.password,
+        "salt": request.salt
+    })
+    return True
 
 
 @app.post("/login/")

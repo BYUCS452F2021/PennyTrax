@@ -1,39 +1,25 @@
 import uuid
 import datetime
-
-mock_data = [
-    {
-        "auth_token": "1",
-        "user_id": 1,
-        "expiration_date": "2021-12-01T00:00:00"
-    },
-    {
-        "auth_token": "2",
-        "user_id": 2,
-        "expiration_date": "2021-12-01T00:00:00"
-    },
-    {
-        "auth_token": "3",
-        "user_id": 3,
-        "expiration_date": "2021-12-01T00:00:00"
-    }
-]
+from database import Database
 
 AUTH_TOKEN_DURATION = 1  # in hours
 
 
 class AuthTokenDAO:
     def __init__(self):
-        # Init DB connection
-        pass
+        self.db = Database()
 
     def create_auth_token(self, user_id):
-        new_auth_token = uuid.uuid4()
-        mock_data.append({
-            "auth_token": new_auth_token,
-            "user_id": user_id,
-            "expiration_date": datetime.datetime.today() + datetime.timedelta(hours=AUTH_TOKEN_DURATION)
-        })
+        new_auth_token = str(uuid.uuid4())
+        expiration_date = datetime.datetime.now(
+        ) + datetime.timedelta(hours=AUTH_TOKEN_DURATION)
+        cursor = self.db.connection.cursor()
+        sql = (
+            "INSERT INTO AuthToken (auth_token, user_id, expiration_date) VALUES (%s, %s, %s)")
+        values = (new_auth_token, user_id, expiration_date)
+        cursor.execute(sql, values)
+        self.db.connection.commit()
+        cursor.close()
         return new_auth_token
 
     def verify_auth_token(self, user_id, auth_token):
@@ -43,7 +29,7 @@ class AuthTokenDAO:
         pass
 
     def get_auth_tokens(self):
-        return mock_data
+        pass
 
     def delete_auth_token(self, auth_token):
         pass
