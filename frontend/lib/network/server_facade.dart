@@ -19,17 +19,4 @@ class ServerFacade {
       throw Exception('Failed to retrieve institution link response');
     }
   }
-
-  /*
-  * Gets all accounts for a user
-  */
-  static Future<dynamic> getAccounts() async {
-    final response = await http.get(Uri.parse(serverURL + 'accounts'));
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to retrieve accounts response');
-    }
-  }
 }

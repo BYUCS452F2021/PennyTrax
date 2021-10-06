@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:frontend/view/add_institution.dart';
+import 'package:http/http.dart' as http;
 
 class Accounts extends StatefulWidget {
   const Accounts({Key? key}) : super(key: key);
@@ -10,12 +13,20 @@ class Accounts extends StatefulWidget {
 }
 
 class _AccountsState extends State<Accounts> {
-  late Future<dynamic> futureGetAccountsResponse = ServerFacade.getAccounts();
+  List<dynamic> accountData = [];
 
   @override
   void initState() {
     super.initState();
-    futureGetAccountsResponse = ServerFacade.getAccounts();
+    fetchAccounts();
+  }
+
+  Future<void> fetchAccounts() async {
+    var response =
+        await http.get(Uri.parse(ServerFacade.serverURL + 'accounts'));
+    setState(() {
+      accountData = jsonDecode(response.body);
+    });
   }
 
   @override
@@ -36,111 +47,103 @@ class _AccountsState extends State<Accounts> {
         ],
       ),
       body: Center(
-        child: FutureBuilder<dynamic>(
-          future: futureGetAccountsResponse,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (context, index) {
-                  return institutionCard(snapshot.data[index]);
-                },
-              );
-            } else if (snapshot.hasError) {
-              return Text('${snapshot.error}');
-            }
-            // By default, show a loading spinner.
-            return const CircularProgressIndicator();
-          },
+        child: RefreshIndicator(
+          child: ListView.builder(
+            itemCount: accountData.length,
+            itemBuilder: (context, index) {
+              return institutionCard(accountData[index]);
+            },
+          ),
+          onRefresh: fetchAccounts,
         ),
       ),
     );
   }
-}
 
-Container institutionCard(institution) {
-  return Container(
-    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-    height: (110 + (institution["accounts"].length * 35)).toDouble(),
-    width: double.maxFinite,
-    child: Card(
-      elevation: 7,
-      child: Padding(
-        padding: const EdgeInsets.all(7),
-        child: Stack(children: <Widget>[
-          Align(
-            alignment: Alignment.centerRight,
-            child: Stack(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(left: 10, top: 5),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15, top: 5),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                '${institution["financial_institution_name"]}',
-                                style: const TextStyle(fontSize: 25),
+  Container institutionCard(institution) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+      height: (110 + (institution["accounts"].length * 35)).toDouble(),
+      width: double.maxFinite,
+      child: Card(
+        elevation: 7,
+        child: Padding(
+          padding: const EdgeInsets.all(7),
+          child: Stack(children: <Widget>[
+            Align(
+              alignment: Alignment.centerRight,
+              child: Stack(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, top: 5),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(left: 15, top: 5),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  '${institution["financial_institution_name"]}',
+                                  style: const TextStyle(fontSize: 25),
+                                ),
                               ),
-                            ),
-                          )
-                        ],
-                      ),
-                      Row(
-                        children: const <Widget>[
-                          Expanded(child: Divider()),
-                        ],
-                      ),
-                      for (var account in institution["accounts"])
-                        accountRow(account)
-                    ],
-                  ),
-                )
-              ],
-            ),
-          )
-        ]),
-      ),
-    ),
-  );
-}
-
-Widget accountRow(account) {
-  return Padding(
-    padding: const EdgeInsets.only(left: 5, right: 10, top: 15),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          '${account["name"]} (...${account["mask"]})',
-          style: const TextStyle(fontSize: 17),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: const <Widget>[
+                            Expanded(child: Divider()),
+                          ],
+                        ),
+                        for (var account in institution["accounts"])
+                          accountRow(account)
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            )
+          ]),
         ),
-        accountAmount(account),
-      ],
-    ),
-  );
-}
+      ),
+    );
+  }
 
-Widget accountAmount(account) {
-  if (account["type"] == "loan") {
-    return Text(
-      '- \$ ${account["current_balance"]}',
-      style: const TextStyle(
-        fontSize: 17,
-        color: Colors.red,
+  Widget accountRow(account) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 5, right: 10, top: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            '${account["name"]} (...${account["mask"]})',
+            style: const TextStyle(fontSize: 17),
+          ),
+          accountAmount(account),
+        ],
       ),
     );
-  } else {
-    return Text(
-      '\$ ${account["current_balance"]}',
-      style: const TextStyle(
-        fontSize: 17,
-        color: Colors.green,
-      ),
-    );
+  }
+
+  Widget accountAmount(account) {
+    if (account["type"] == "loan") {
+      return Text(
+        '- \$ ${account["current_balance"]}',
+        style: const TextStyle(
+          fontSize: 17,
+          color: Colors.red,
+        ),
+      );
+    } else {
+      return Text(
+        '\$ ${account["current_balance"]}',
+        style: const TextStyle(
+          fontSize: 17,
+          color: Colors.green,
+        ),
+      );
+    }
   }
 }
