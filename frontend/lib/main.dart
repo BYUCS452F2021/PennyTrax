@@ -1,17 +1,4 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'package:frontend/view/accounts.dart';
-
-void main() {
-  runApp(MaterialApp(
-    title: 'PennyTrax',
-    home: const Accounts(),
-    theme: ThemeData(
-      primarySwatch: Colors.blue,
-    ),
-    debugShowCheckedModeBanner: false,
-  ));
-=======
 import 'package:frontend/login_page.dart';
 
 void main() {
@@ -130,5 +117,4 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
->>>>>>> feature/add_login
 }

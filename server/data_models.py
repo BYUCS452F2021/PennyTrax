@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-<<<<<<< HEAD
+from typing import Optional
 
 class Account(BaseModel):
     id: int
@@ -14,9 +14,6 @@ class Account(BaseModel):
 class PlaidSignInResult(BaseModel):
     user_id: int
     public_token: str
-=======
-from typing import Optional
-
 
 class RegisterRequest(BaseModel):
     first_name: str
@@ -25,8 +22,6 @@ class RegisterRequest(BaseModel):
     password: str
     salt: str
 
-
 class LoginRequest(BaseModel):
     email: str
     password: str
->>>>>>> feature/add_login
