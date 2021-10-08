@@ -1,12 +1,12 @@
 #! /usr/bin/env python3
+import uvicorn
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
-import DAO.UserDAO as userDAO
-from DAO.AccountDAO import AccountDAO
 import data_models
 import plaid
 import link
+from DAO import UserDAO, AuthTokenDAO, AccountDAO
+# TODO: any time you add new DAO's, edit DAO/__init__.py for cleaner imports.
 
 app = FastAPI()
 
@@ -24,10 +24,47 @@ app.add_middleware(
 async def root():
     return {"message": "Hello World"}
 
+# Login
 
-@app.get("/user/{user_id}")
-async def read_user(user_id):
-    return userDAO.read_user(int(user_id))
+@app.get("/users/")
+async def get_all_users():
+    dao = UserDAO()
+    return dao.get_all_users()
+    
+@app.get("/users/{user_id}")
+async def get_user(user_id: int):
+    dao = UserDAO()
+    return dao.get_user(int(user_id))
+
+
+@app.post("/register/")
+async def register(request: data_models.RegisterRequest):
+    dao = UserDAO()
+    dao.create_user({
+        "first_name": request.first_name,
+        "last_name": request.last_name,
+        "email": request.email,
+        "password": request.password,
+        "salt": request.salt
+    })
+    return True
+
+
+@app.post("/login/")
+async def login(request: data_models.LoginRequest):
+    user_dao = UserDAO()
+    auth_token_dao = AuthTokenDAO()
+    user = user_dao.get_user_by_email(request.email)
+    if user == None:
+        return {"success": False, "message": "Username does not exist"}
+    elif user["password"] != request.password:
+        return {"success": False, "message": "Password is incorrect"}
+    else:
+        auth_token = auth_token_dao.create_auth_token(user["id"])
+        return {"success": True, "auth_token": auth_token}
+
+
+# Accounts:
 
 @app.get("/accounts")
 async def get_accounts():
@@ -53,6 +90,8 @@ curl localhost:8000/accounts/add -H "Content-Type: application/json" -d \
 '{"id": 3,"financial_institution_id": "ghi123","user_id": "demo_user","name": "Savings","type": "depository","subtype": "savings","available_balance": "2500","current_balance": "2500"}'
     
 """
+
+# Institutions / Linking
 
 @app.post("/institutions/add")
 async def add_institution():
@@ -100,7 +139,7 @@ async def link_store_token(data: data_models.PlaidSignInResult):
 
     # Note: use plaid.get_transactions(access_token, start, end)
 
-
+# Transactions
 
 # Demo API endpoint to get transactions. We probably don't actually need to expose
 # an endpoint like this since getting transactions from Plaid will happen on the backend,

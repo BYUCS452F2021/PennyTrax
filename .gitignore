@@ -1,7 +1,5 @@
 .DS_Store
 .env
-server/DAO/__pycache__
-server/plaid/__pycache__
-server/__pycache__
-frontend/ios/build
+__pycache__/
+frontend/ios/build/
 db.sh

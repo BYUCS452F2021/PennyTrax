@@ -1,35 +1,78 @@
-def create_user(user_info):
-    pass
+from database import Database
+import data_models
 
 
-def read_user(user_id):
-    mock_data = {
-        1: {
-            "firstName": "Brayden",
-            "lastName": "Wood",
-            "email": "braydenwood1@gmail.com",
-            "password": "test123"
-        },
-        2: {
-            "firstName": "Test",
-            "lastName": "Testerson",
-            "email": "testing@gmail.com",
-            "password": "test123"
-        },
-        3: {
-            "firstName": "Alice",
-            "lastName": "Smith",
-            "email": "alicesmith@gmail.com",
-            "password": "test123"
-        }
-    }
+class UserDAO:
+    def __init__(self):
+        self.db = Database()
 
-    return mock_data[user_id]
+    def __del__(self):
+        self.db.connection.close()
 
+    def create_user(self, user_data):
+        cursor = self.db.connection.cursor()
+        sql = (
+            "INSERT INTO User (first_name, last_name, email, password, salt) VALUES (%s, %s, %s, %s, %s)")
+        values = (user_data["first_name"],
+                  user_data["last_name"],
+                  user_data["email"],
+                  user_data["password"],
+                  user_data["salt"])
+        cursor.execute(sql, values)
+        self.db.connection.commit()
+        cursor.close()
 
-def update_user(user_id, user_info):
-    pass
+    def get_user(self, id):
+        cursor = self.db.connection.cursor()
+        sql = "SELECT * FROM User WHERE id = %(id)s"
+        cursor.execute(sql, {"id": id})
+        result = cursor.fetchall()
+        cursor.close()
 
+        if len(result) == 1:
+            userData = result[0]
+            user = {}
+            user["id"] = userData[0]
+            user["first_name"] = userData[1]
+            user["last_name"] = userData[2]
+            user["email"] = userData[3]
+            user["password"] = userData[4]
+            user["salt"] = userData[5]
+            return user
+        else:
+            return None
 
-def delete_user(user_id):
-    pass
+    def get_user_by_email(self, email):
+        cursor = self.db.connection.cursor()
+        sql = "SELECT * FROM User WHERE email = %(email)s"
+        cursor.execute(sql, {"email": email})
+        result = cursor.fetchall()
+        cursor.close()
+
+        if len(result) == 1:
+            userData = result[0]
+            user = {}
+            user["id"] = userData[0]
+            user["first_name"] = userData[1]
+            user["last_name"] = userData[2]
+            user["email"] = userData[3]
+            user["password"] = userData[4]
+            user["salt"] = userData[5]
+            return user
+        else:
+            return None
+
+    def get_all_users(self):
+        cursor = self.db.connection.cursor()
+        sql = "SELECT * FROM User"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        cursor.close()
+
+        return result
+
+    def update_user(self, id, user_info):
+        pass
+
+    def delete_user(self, id):
+        pass
