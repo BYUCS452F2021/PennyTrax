@@ -13,6 +13,9 @@ class Accounts extends StatefulWidget {
 }
 
 class _AccountsState extends State<Accounts> {
+  static const int ADD_FINANCIAL_INSTITUTION_OPTION = 0;
+  static const int ADD_CASH_ACCOUNT_OPTION = 1;
+
   List<dynamic> accountData = [];
 
   @override
@@ -35,14 +38,19 @@ class _AccountsState extends State<Accounts> {
       appBar: AppBar(
         title: const Text('Accounts'),
         actions: <Widget>[
-          IconButton(
+          PopupMenuButton(
             icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AddInstitution()),
-              );
-            },
+            onSelected: addAccountMenuActions,
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                child: Text("Add Financial Institution"),
+                value: ADD_FINANCIAL_INSTITUTION_OPTION,
+              ),
+              const PopupMenuItem(
+                child: Text("Add Cash Account"),
+                value: ADD_CASH_ACCOUNT_OPTION,
+              ),
+            ],
           ),
         ],
       ),
@@ -58,6 +66,17 @@ class _AccountsState extends State<Accounts> {
         ),
       ),
     );
+  }
+
+  void addAccountMenuActions(int selected) {
+    if (selected == ADD_FINANCIAL_INSTITUTION_OPTION) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AddInstitution()),
+      );
+    } else if (selected == ADD_CASH_ACCOUNT_OPTION) {
+      print("Go to add cash account page");
+    }
   }
 
   Container institutionCard(institution) {
