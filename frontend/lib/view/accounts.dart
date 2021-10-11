@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/network/server_facade.dart';
+import 'package:frontend/view/add_cash_account.dart';
 import 'package:frontend/view/add_institution.dart';
 import 'package:http/http.dart' as http;
 
@@ -75,7 +76,10 @@ class _AccountsState extends State<Accounts> {
         MaterialPageRoute(builder: (context) => const AddInstitution()),
       );
     } else if (selected == ADD_CASH_ACCOUNT_OPTION) {
-      print("Go to add cash account page");
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AddCashAccount()),
+      );
     }
   }
 
