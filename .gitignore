@@ -1,5 +1,5 @@
 .DS_Store
 .env\
-server/DAO/__pycache__
-server/plaid/__pycache__
-server/__pycache__
+server/DAO/__pycache__/
+server/plaid/__pycache__/
+server/__pycache__/

@@ -19,4 +19,28 @@ class ServerFacade {
       throw Exception('Failed to retrieve institution link response');
     }
   }
+
+  /* Create a new cash account */
+  static Future<dynamic> addCashAccount(Map body) async {
+    return await postRequest('accounts/add', body);
+  }
+
+  /* Create post request */
+  static Future<dynamic> postRequest(String endpoint, Map body) async {
+    return await http.post(
+      Uri.parse(serverURL + endpoint),
+      body: json.encode(body),
+      headers: {
+        'Content-type': 'application/json',
+        //'Accept': 'application/json',
+        //"Authorization": "Some token"
+      },
+    ).then((http.Response response) {
+      final int statusCode = response.statusCode;
+      if (statusCode < 200 || statusCode > 400 || json == null) {
+        throw new Exception("Error while fetching data");
+      }
+      return json.decode(response.body);
+    });
+  }
 }

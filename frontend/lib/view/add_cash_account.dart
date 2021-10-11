@@ -1,8 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:math' as math;
+
+import 'package:frontend/network/server_facade.dart';
 
 class AddCashAccount extends StatefulWidget {
   const AddCashAccount({Key? key}) : super(key: key);
@@ -12,8 +11,12 @@ class AddCashAccount extends StatefulWidget {
 }
 
 class _AddCashAccountState extends State<AddCashAccount> {
+  bool waitingForResonse = false;
   bool _autovalidate = false;
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
+
+  final accountNameController = TextEditingController();
+  final initialBalanceController = TextEditingController();
 
   @override
   void initState() {
@@ -41,6 +44,7 @@ class _AddCashAccountState extends State<AddCashAccount> {
                   inputAccountName,
                   inputInitialBalance,
                   buttonCreateAccount,
+                  loadingIndicator,
                 ],
               ),
             ),
@@ -66,6 +70,7 @@ class _AddCashAccountState extends State<AddCashAccount> {
       child: TextFormField(
         decoration: InputDecoration(labelText: 'Account Name'),
         validator: validateAccountName,
+        controller: accountNameController,
       ),
     );
   }
@@ -82,18 +87,19 @@ class _AddCashAccountState extends State<AddCashAccount> {
           WhitelistingTextInputFormatter(RegExp(r"^\d+\.?\d{0,2}"))
         ],
         validator: validateInitialBalance,
+        controller: initialBalanceController,
       ),
     );
   }
 
   Widget get buttonCreateAccount {
     return Padding(
-      padding: EdgeInsets.only(top: 25),
+      padding: EdgeInsets.only(top: 25, bottom: 25),
       child: ButtonTheme(
-        height: 46,
+        height: 40,
         child: RaisedButton(
           child: const Text('Create Account',
-              style: TextStyle(color: Colors.white, fontSize: 20)),
+              style: TextStyle(color: Colors.white, fontSize: 15)),
           color: Colors.black87,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
@@ -101,6 +107,10 @@ class _AddCashAccountState extends State<AddCashAccount> {
         ),
       ),
     );
+  }
+
+  Widget get loadingIndicator {
+    return waitingForResonse ? const CircularProgressIndicator() : Container();
   }
 
   String? validateAccountName(String? input) {
@@ -116,10 +126,24 @@ class _AddCashAccountState extends State<AddCashAccount> {
   }
 
   void createAccount() {
-    setState(() => _autovalidate = true);
+    setState(() => {_autovalidate = true});
     if (_key.currentState!.validate()) {
       _key.currentState!.save();
-      print("Creating cash account");
+      waitingForResonse = true;
+      print("Creating cash account...");
+
+      Map<String, String> account = {
+        'name': accountNameController.text,
+        'available_balance': initialBalanceController.text,
+        'current_balance': initialBalanceController.text,
+      };
+
+      ServerFacade.addCashAccount(account).then((value) {
+        print("Cash account created!");
+        Navigator.pop(context);
+      }, onError: (error) {
+        print(error);
+      });
     }
   }
 }
