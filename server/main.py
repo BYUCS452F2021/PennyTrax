@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from DAO.UserDAO import UserDAO
 from DAO.AuthTokenDAO import AuthTokenDAO
 import data_models
+import hashlib
 
 app = FastAPI()
 
@@ -26,11 +27,15 @@ async def get_user(user_id: int):
 @app.post("/register/")
 async def register(request: data_models.RegisterRequest):
     dao = UserDAO()
+
+    salted_pass = request.password + request.salt
+    hashed_pass = hashlib.sha256(salted_pass.encode('utf-8')).hexdigest()
+
     dao.create_user({
         "first_name": request.first_name,
         "last_name": request.last_name,
         "email": request.email,
-        "password": request.password,
+        "password": hashed_pass,
         "salt": request.salt
     })
     return True
@@ -40,10 +45,16 @@ async def register(request: data_models.RegisterRequest):
 async def login(request: data_models.LoginRequest):
     user_dao = UserDAO()
     auth_token_dao = AuthTokenDAO()
+
     user = user_dao.get_user_by_email(request.email)
+
     if user == None:
         return {"success": False, "message": "Username does not exist"}
-    elif user["password"] != request.password:
+
+    salted_pass = request.password + user["salt"]
+    hashed_pass = hashlib.sha256(salted_pass.encode('utf-8')).hexdigest()
+
+    if user["password"] != hashed_pass:
         return {"success": False, "message": "Password is incorrect"}
     else:
         auth_token = auth_token_dao.create_auth_token(user["id"])
