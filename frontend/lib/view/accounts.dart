@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:frontend/view/add_cash_account.dart';
 import 'package:frontend/view/add_institution.dart';
-import 'package:http/http.dart' as http;
 
 class Accounts extends StatefulWidget {
   const Accounts({Key? key}) : super(key: key);
@@ -26,10 +23,12 @@ class _AccountsState extends State<Accounts> {
   }
 
   Future<void> fetchAccounts() async {
-    var response =
-        await http.get(Uri.parse(ServerFacade.serverURL + 'accounts'));
-    setState(() {
-      accountData = jsonDecode(response.body);
+    ServerFacade.getAccounts().then((value) {
+      setState(() {
+        accountData = value;
+      });
+    }, onError: (error) {
+      print(error);
     });
   }
 

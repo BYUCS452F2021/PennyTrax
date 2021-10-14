@@ -20,6 +20,12 @@ class ServerFacade {
     }
   }
 
+  /* Get all of a users accounts account */
+  static Future<dynamic> getAccounts() async {
+    var response = await http.get(Uri.parse(serverURL + 'accounts'));
+    return jsonDecode(response.body);
+  }
+
   /* Create a new cash account */
   static Future<dynamic> addCashAccount(Map body) async {
     return await postRequest('accounts/add', body);
