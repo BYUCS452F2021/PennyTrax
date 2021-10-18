@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/register_page.dart';
+import 'package:frontend/model/register_request.dart'
+import 'package:frontend/network/server_facade.dart'
 
 class LoginRoute extends StatelessWidget {
   @override
@@ -69,7 +71,10 @@ class _LoginPageState extends State<LoginPage> {
             borderRadius: BorderRadius.circular(50)
           ),
           onPressed: () => {
-
+            email = inputEmail.Text
+            password = inputPassword.Text
+            login_request = LoginRequest(email, password)
+            login_response = ServerFacade.loginUser(login_request)
           },
         ),
       ),
