@@ -3,6 +3,8 @@ import 'package:frontend/register_page.dart';
 import 'package:frontend/model/register_request.dart'
 import 'package:frontend/network/server_facade.dart'
 
+//TODO: add controller
+
 class LoginRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

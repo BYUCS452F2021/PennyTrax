@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/login_page.dart';
 import 'package:frontend/main.dart';
+import 'package:frontend/model/register_request.dart'
+import 'package:frontend/network/server_facade.dart'
+import 'package:uuid/uuid.dart';
+
+//TODO: add controller
+
+var uuid = Uuid();
 
 class RegisterRoute extends StatelessWidget {
   @override
@@ -96,7 +103,13 @@ class _RegisterPageState extends State<RegisterPage> {
             borderRadius: BorderRadius.circular(50)
           ),
           onPressed: () => {
-
+            first_name = inputFirstName.Text
+            last_name = inputLastName.Text
+            email = inputEmail.Text
+            password = inputPassword.Text
+            salt = uuid.v4()
+            register_request = RegisterRequest(first_name, last_name, email, password, salt)
+            register_response = ServerFacade.registerUser(register_request)
           },
         ),
       ),
