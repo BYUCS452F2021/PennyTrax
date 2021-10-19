@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/register_page.dart';
-import 'package:frontend/model/login_request.dart';
 import 'package:frontend/network/server_facade.dart';
 
 //TODO: add controller
@@ -115,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
     'password': passwordController.text
   };
 
-  ServerFacade.addCashAccount(login).then((value) {
+  ServerFacade.loginUser(login).then((value) {
         print("User logged in");
       }, onError: (error) {
         print(error);

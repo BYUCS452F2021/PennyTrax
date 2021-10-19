@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:frontend/model/institution_link_response.dart';
-import 'package:frontend/model/login_response.dart';
 import 'package:http/http.dart' as http;
 
 class ServerFacade {

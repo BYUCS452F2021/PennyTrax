@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/login_page.dart';
 import 'package:frontend/main.dart';
-import 'package:frontend/model/register_request.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:uuid/uuid.dart';
 
@@ -154,7 +153,7 @@ class _RegisterPageState extends State<RegisterPage> {
       'password': passwordController.text,
       'salt': salt,
     };
-    ServerFacade.addCashAccount(register).then((value) {
+    ServerFacade.registerUser(register).then((value) {
         print("User registered");
       }, onError: (error) {
         print(error);
