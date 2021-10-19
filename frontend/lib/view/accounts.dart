@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:frontend/network/server_facade.dart';
+import 'package:frontend/view/add_cash_account.dart';
 import 'package:frontend/view/add_institution.dart';
-import 'package:http/http.dart' as http;
 
 class Accounts extends StatefulWidget {
   const Accounts({Key? key}) : super(key: key);
@@ -13,6 +11,9 @@ class Accounts extends StatefulWidget {
 }
 
 class _AccountsState extends State<Accounts> {
+  static const int ADD_FINANCIAL_INSTITUTION_OPTION = 0;
+  static const int ADD_CASH_ACCOUNT_OPTION = 1;
+
   List<dynamic> accountData = [];
 
   @override
@@ -22,10 +23,12 @@ class _AccountsState extends State<Accounts> {
   }
 
   Future<void> fetchAccounts() async {
-    var response =
-        await http.get(Uri.parse(ServerFacade.serverURL + 'accounts'));
-    setState(() {
-      accountData = jsonDecode(response.body);
+    ServerFacade.getAccounts().then((value) {
+      setState(() {
+        accountData = value;
+      });
+    }, onError: (error) {
+      print(error);
     });
   }
 
@@ -35,14 +38,19 @@ class _AccountsState extends State<Accounts> {
       appBar: AppBar(
         title: const Text('Accounts'),
         actions: <Widget>[
-          IconButton(
+          PopupMenuButton(
             icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AddInstitution()),
-              );
-            },
+            onSelected: addAccountMenuActions,
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                child: Text("Add Financial Institution"),
+                value: ADD_FINANCIAL_INSTITUTION_OPTION,
+              ),
+              const PopupMenuItem(
+                child: Text("Add Cash Account"),
+                value: ADD_CASH_ACCOUNT_OPTION,
+              ),
+            ],
           ),
         ],
       ),
@@ -58,6 +66,20 @@ class _AccountsState extends State<Accounts> {
         ),
       ),
     );
+  }
+
+  void addAccountMenuActions(int selected) {
+    if (selected == ADD_FINANCIAL_INSTITUTION_OPTION) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AddInstitution()),
+      );
+    } else if (selected == ADD_CASH_ACCOUNT_OPTION) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const AddCashAccount()),
+      );
+    }
   }
 
   Container institutionCard(institution) {

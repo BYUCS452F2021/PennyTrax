@@ -1,12 +1,13 @@
+import hashlib
 #! /usr/bin/env python3
+import uvicorn
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
-import DAO.UserDAO as userDAO
-from DAO.AccountDAO import AccountDAO
 import data_models
 import plaid
 import link
+from DAO import UserDAO, AuthTokenDAO, AccountDAO
+# TODO: any time you add new DAO's, edit DAO/__init__.py for cleaner imports.
 
 app = FastAPI()
 
@@ -20,14 +21,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
 
+# Accounts:
 
-@app.get("/user/{user_id}")
-async def read_user(user_id):
-    return userDAO.read_user(int(user_id))
 
 @app.get("/accounts")
 async def get_accounts():
@@ -40,8 +40,10 @@ async def get_accounts():
 #     return dao.get_accounts(id=int(id))
 
 # NOTE: make sure you're including the header "Content-Type: application/json"
+
+
 @app.post("/accounts/add")
-async def add_account(account: data_models.Account):
+async def add_account(account: data_models.SimpleAccount):
     dao = AccountDAO()
     # TODO: data validation to make sure this account is valid.
     acct_id = dao.add_account(account)
@@ -54,15 +56,20 @@ curl localhost:8000/accounts/add -H "Content-Type: application/json" -d \
     
 """
 
+# Institutions / Linking
+
+
 @app.post("/institutions/add")
 async def add_institution():
-    token = await plaid.get_link_token(user='test user') # Not sure how to handle user yet.
+    # Not sure how to handle user yet.
+    token = await plaid.get_link_token(user='test user')
     # TODO: replace with real IP
     url = "localhost:8000/link/begin/" + token
     # Do we need to try to obfuscate the token at all?
     return {
         "link_url": url
     }
+
 
 @app.get("/link/begin/{link_token}")
 async def begin_link(link_token: str):
@@ -75,6 +82,7 @@ async def begin_link(link_token: str):
     html = link.get_link_html(user_id, link_token)
     return Response(content=html)
 
+
 @app.get("/link/done")
 async def link_done_page():
     """Returns HTML content to be viewed in a web browser:
@@ -83,6 +91,7 @@ async def link_done_page():
     the browser navigated, and take the user back to the previous page)
     """
     return Response(content=link.get_done_html())
+
 
 @app.post("/link/store_token")
 async def link_store_token(data: data_models.PlaidSignInResult):
@@ -100,12 +109,14 @@ async def link_store_token(data: data_models.PlaidSignInResult):
 
     # Note: use plaid.get_transactions(access_token, start, end)
 
-
+# Transactions
 
 # Demo API endpoint to get transactions. We probably don't actually need to expose
 # an endpoint like this since getting transactions from Plaid will happen on the backend,
 # but this is here just to show how it's done.
 # TODO: delete me :p
+
+
 @app.get("/test_transactions")
 async def transactions_test():
     at = "access-sandbox-50ff7ceb-ebdc-40e8-ae22-27146fb1bed4"
@@ -115,7 +126,53 @@ async def transactions_test():
     return trans
 
 
+@app.get("/users/")
+async def get_all_users():
+    dao = UserDAO()
+    return dao.get_all_users()
 
+
+@app.get("/users/{user_id}")
+async def get_user(user_id: int):
+    dao = UserDAO()
+    return dao.get_user(int(user_id))
+
+
+@app.post("/register/")
+async def register(request: data_models.RegisterRequest):
+    dao = UserDAO()
+
+    salted_pass = request.password + request.salt
+    hashed_pass = hashlib.sha256(salted_pass.encode('utf-8')).hexdigest()
+
+    dao.create_user({
+        "first_name": request.first_name,
+        "last_name": request.last_name,
+        "email": request.email,
+        "password": hashed_pass,
+        "salt": request.salt
+    })
+    return True
+
+
+@app.post("/login/")
+async def login(request: data_models.LoginRequest):
+    user_dao = UserDAO()
+    auth_token_dao = AuthTokenDAO()
+
+    user = user_dao.get_user_by_email(request.email)
+
+    if user == None:
+        return {"success": False, "message": "Username does not exist"}
+
+    salted_pass = request.password + user["salt"]
+    hashed_pass = hashlib.sha256(salted_pass.encode('utf-8')).hexdigest()
+
+    if user["password"] != hashed_pass:
+        return {"success": False, "message": "Password is incorrect"}
+    else:
+        auth_token = auth_token_dao.create_auth_token(user["id"])
+        return {"success": True, "auth_token": auth_token}
 if __name__ == "__main__":
     # You can just run ./main.py to start the API now
     # (or python3 main.py if your interpreter is giving you trouble)

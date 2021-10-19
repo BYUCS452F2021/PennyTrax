@@ -3,11 +3,12 @@ import 'package:frontend/view/accounts.dart';
 import 'package:frontend/view/transactions.dart';
 import 'package:frontend/view/spending.dart';
 import 'package:frontend/view/budget.dart';
+import 'package:frontend/view/login_page.dart';
 
 void main() {
   runApp(MaterialApp(
-    title: 'PennyTrax',
-    home: const AppNavigation(),
+    title: 'Penny Trax',
+    home: LoginPage(),
     theme: ThemeData(
       primarySwatch: Colors.blue,
     ),
