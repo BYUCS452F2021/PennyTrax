@@ -1,5 +1,5 @@
 
-class LoginResponse {
+/*class LoginResponse {
   final bool success;
   final String auth_token;
 
@@ -11,4 +11,4 @@ class LoginResponse {
       authToken: json['auth_token'],
     );
   }
-}
+}*/

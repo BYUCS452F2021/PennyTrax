@@ -1,4 +1,4 @@
-class LoginRequest {
+/*class LoginRequest {
   final String email;
   final String password;
 
@@ -14,4 +14,4 @@ class LoginRequest {
       password: json['password'] as string,
     );
   }
-}
+}*/

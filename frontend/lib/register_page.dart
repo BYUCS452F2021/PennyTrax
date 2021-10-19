@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/login_page.dart';
 import 'package:frontend/main.dart';
-import 'package:frontend/model/register_request.dart'
-import 'package:frontend/network/server_facade.dart'
+import 'package:frontend/model/register_request.dart';
+import 'package:frontend/network/server_facade.dart';
 import 'package:uuid/uuid.dart';
 
 //TODO: add controller
 
-var uuid = Uuid();
+var uuid = const Uuid();
+
+final firstNameController = TextEditingController();
+final lastNameController = TextEditingController();
+final emailController = TextEditingController();
+final passwordController = TextEditingController();
 
 class RegisterRoute extends StatelessWidget {
   @override
@@ -50,6 +55,7 @@ class _RegisterPageState extends State<RegisterPage> {
             borderRadius: BorderRadius.circular(50.0)
           )
         ),
+        controller: firstNameController,
       ),
     );
     final inputLastName = Padding(
@@ -63,6 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
             borderRadius: BorderRadius.circular(50.0)
           )
         ),
+        controller: lastNameController,
       ),
     );
     final inputEmail = Padding(
@@ -76,6 +83,7 @@ class _RegisterPageState extends State<RegisterPage> {
             borderRadius: BorderRadius.circular(50.0)
           )
         ),
+        controller: emailController,
       ),
     );
     final inputPassword = Padding(
@@ -90,6 +98,7 @@ class _RegisterPageState extends State<RegisterPage> {
             borderRadius: BorderRadius.circular(50.0)
           )
         ),
+        controller: passwordController,
       ),
     );
     final buttonRegister = Padding(
@@ -102,15 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50)
           ),
-          onPressed: () => {
-            first_name = inputFirstName.Text
-            last_name = inputLastName.Text
-            email = inputEmail.Text
-            password = inputPassword.Text
-            salt = uuid.v4()
-            register_request = RegisterRequest(first_name, last_name, email, password, salt)
-            register_response = ServerFacade.registerUser(register_request)
-          },
+          onPressed: registerUser,
         ),
       ),
     );
@@ -142,5 +143,21 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       )
     );
+  }
+
+  void registerUser() {
+    String salt = uuid.v4();
+    Map<String, String> register = {
+      'first_name': firstNameController.text, 
+      'last_name': lastNameController.text,
+      'email': emailController.text,
+      'password': passwordController.text,
+      'salt': salt,
+    };
+    ServerFacade.addCashAccount(register).then((value) {
+        print("User registered");
+      }, onError: (error) {
+        print(error);
+      });
   }
 }

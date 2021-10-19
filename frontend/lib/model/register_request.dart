@@ -1,4 +1,4 @@
-class RegisterRequest {
+/*class RegisterRequest {
   final String first_name;
   final String last_name;
   final String email;
@@ -22,4 +22,4 @@ class RegisterRequest {
       salt: json['salt'] as string,
     );
   }
-}
+}*/

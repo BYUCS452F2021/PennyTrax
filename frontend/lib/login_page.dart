@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/register_page.dart';
-import 'package:frontend/model/register_request.dart'
-import 'package:frontend/network/server_facade.dart'
+import 'package:frontend/model/login_request.dart';
+import 'package:frontend/network/server_facade.dart';
 
 //TODO: add controller
 
+// ignore: use_key_in_widget_constructors
 class LoginRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -17,6 +18,9 @@ class LoginRoute extends StatelessWidget {
     );
   }
 }
+
+final emailController = TextEditingController();
+final passwordController = TextEditingController();
 
 class LoginPage extends StatefulWidget {
   @override
@@ -46,6 +50,7 @@ class _LoginPageState extends State<LoginPage> {
             borderRadius: BorderRadius.circular(50.0)
           )
         ),
+        controller: emailController,
       ),
     );
     final inputPassword = Padding(
@@ -60,6 +65,7 @@ class _LoginPageState extends State<LoginPage> {
             borderRadius: BorderRadius.circular(50.0)
           )
         ),
+        controller: passwordController,
       ),
     );
     final buttonLogin = Padding(
@@ -72,12 +78,7 @@ class _LoginPageState extends State<LoginPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50)
           ),
-          onPressed: () => {
-            email = inputEmail.Text
-            password = inputPassword.Text
-            login_request = LoginRequest(email, password)
-            login_response = ServerFacade.loginUser(login_request)
-          },
+          onPressed: loginUser,
         ),
       ),
     );
@@ -108,4 +109,19 @@ class _LoginPageState extends State<LoginPage> {
       )
     );
   }
+  void loginUser() {
+  Map<String, String> login = {
+    'email': emailController.text,
+    'password': passwordController.text
+  };
+
+  ServerFacade.addCashAccount(login).then((value) {
+        print("User logged in");
+      }, onError: (error) {
+        print(error);
+      });
+  }
 }
+
+
+
