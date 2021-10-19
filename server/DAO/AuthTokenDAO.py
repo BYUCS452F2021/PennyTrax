@@ -9,9 +9,6 @@ class AuthTokenDAO:
     def __init__(self):
         self.db = Database()
 
-    def __del__(self):
-        self.db.connection.close()
-
     def create_auth_token(self, user_id):
         new_auth_token = str(uuid.uuid4())
         expiration_date = datetime.datetime.now(

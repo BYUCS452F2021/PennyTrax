@@ -5,9 +5,6 @@ class UserDAO:
     def __init__(self):
         self.db = Database()
 
-    def __del__(self):
-        self.db.connection.close()
-
     def create_user(self, user_data):
 
         cursor = self.db.connection.cursor()
