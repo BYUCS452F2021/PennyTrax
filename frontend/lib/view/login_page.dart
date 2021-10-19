@@ -16,14 +16,13 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final logo = Padding(
-      padding: EdgeInsets.all(20),
-      child: Hero(
-          tag: 'hero',
-          child: CircleAvatar(
-            radius: 100.0,
-            child: Image.asset('assets/PennyTrax.png'),
-          )),
+      padding: EdgeInsets.all(30),
+      child: Image.asset(
+        'assets/PennyTraxLogo.png',
+        fit: BoxFit.cover,
+      ),
     );
+
     final inputEmail = Padding(
       padding: EdgeInsets.only(bottom: 10),
       child: TextField(
@@ -89,6 +88,7 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
+      backgroundColor: const Color(0xff3d4761),
     ));
   }
 

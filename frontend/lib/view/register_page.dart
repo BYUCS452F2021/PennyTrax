@@ -19,13 +19,11 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final logo = Padding(
-      padding: EdgeInsets.all(20),
-      child: Hero(
-          tag: 'hero',
-          child: CircleAvatar(
-            radius: 100.0,
-            child: Image.asset('assets/PennyTrax.png'),
-          )),
+      padding: EdgeInsets.all(30),
+      child: Image.asset(
+        'assets/PennyTraxLogo.png',
+        fit: BoxFit.cover,
+      ),
     );
 
     final inputFirstName = Padding(
@@ -109,23 +107,25 @@ class _RegisterPageState extends State<RegisterPage> {
         });
 
     return SafeArea(
-        child: Scaffold(
-      body: Center(
-        child: ListView(
-          shrinkWrap: true,
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          children: <Widget>[
-            logo,
-            inputFirstName,
-            inputLastName,
-            inputEmail,
-            inputPassword,
-            buttonRegister,
-            buttonLogin
-          ],
+      child: Scaffold(
+        body: Center(
+          child: ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            children: <Widget>[
+              logo,
+              inputFirstName,
+              inputLastName,
+              inputEmail,
+              inputPassword,
+              buttonRegister,
+              buttonLogin
+            ],
+          ),
         ),
+        backgroundColor: const Color(0xff3d4761),
       ),
-    ));
+    );
   }
 
   void registerUser() {
