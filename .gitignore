@@ -1,11 +1,4 @@
 .DS_Store
-<<<<<<< HEAD
-.env\
-.env
-server/DAO/__pycache__
-server/plaid/__pycache__
-server/__pycache__
-=======
 .env
 __pycache__/
 server/DAO/__pycache__/
@@ -14,4 +7,3 @@ server/__pycache__/
 frontend/ios/build/
 db.sh
 
->>>>>>> 84e07696348728aa94a1f15f1f73e8cf7175e7b1
