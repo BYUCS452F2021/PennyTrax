@@ -1,13 +1,38 @@
 from database import Database
-import mysql.connector
 
 
 class TransactionDAO:
     def __init__(self):
         self.db = Database()
 
-    def get_transactions(self, id=None):
-        return dummy_transactions
+    # Returns all transactions that have an account_id in the account_ids param
+    def get_transactions(self, account_ids: list):
+        if len(account_ids) == 0:
+            return []
+
+        cursor = self.db.connection.cursor()
+        format_account_ids = ','.join(['%s'] * len(account_ids))
+        cursor.execute("SELECT * FROM Transaction WHERE account_id IN (%s)" %
+                       format_account_ids, tuple(account_ids))
+
+        transactions = []
+        for transaction in cursor.fetchall():
+            transactions.append({
+                "id": transaction[0],
+                "account_id": transaction[1],
+                "date": transaction[2],
+                "amount": transaction[3],
+                "pending": bool(transaction[4]),
+                "merchant_name": transaction[5],
+                "description": transaction[6],
+                "category": transaction[7],
+                "notes": transaction[8],
+                "split": bool(transaction[9]),
+                "parent_transaction_id": transaction[10],
+                "hidden_from_budget": bool(transaction[11])
+            })
+
+        return transactions
 
     def add_transaction(self, transaction):
         cursor = self.db.connection.cursor()
@@ -54,6 +79,27 @@ class TransactionDAO:
         self.db.connection.commit()
         cursor.close()
         print("Imported " + str(len(transactions)) + " transactions")
+
+    def update_transaction(self, transaction):
+        cursor = self.db.connection.cursor()
+        sql = (
+            "UPDATE Transaction SET date=%s, amount=%s, pending=%s, merchant_name=%s, description=%s, category=%s, notes=%s, split=%s, parent_transaction_id=%s, hidden_from_budget=%s WHERE id=%s")
+        values = (transaction.date,
+                  transaction.amount,
+                  int(transaction.pending),
+                  transaction.merchant_name,
+                  transaction.description,
+                  transaction.category,
+                  transaction.notes,
+                  int(transaction.split),
+                  transaction.parent_transaction_id,
+                  int(transaction.hidden_from_budget),
+                  # WHERE id
+                  transaction.id)
+
+        cursor.execute(sql, values)
+        self.db.connection.commit()
+        cursor.close()
 
 
 dummy_transactions = [

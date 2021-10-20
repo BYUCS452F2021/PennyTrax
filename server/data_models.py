@@ -19,6 +19,10 @@ class SimpleAccount(BaseModel):
     current_balance: float
 
 
+class GetTransactionRequest(BaseModel):
+    account_ids: list
+
+
 class Transaction(BaseModel):
     id: str
     account_id: str

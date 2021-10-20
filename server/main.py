@@ -127,10 +127,10 @@ async def transactions_test():
     return trans
 
 
-@app.get("/transactions")
-async def get_transactions():
+@app.post("/transactions")
+async def get_transactions(request: data_models.GetTransactionRequest):
     dao = TransactionDAO()
-    return dao.get_transactions()
+    return dao.get_transactions(request.account_ids)
 
 
 @app.post("/transactions/add")
@@ -138,7 +138,6 @@ async def get_transactions(transaction: data_models.Transaction):
     dao = TransactionDAO()
     # TODO: data validation to make sure this account is valid.
     dao.add_transaction(transaction)
-    print(transaction.account_id)
     return {"success": True}
 
 
@@ -146,6 +145,14 @@ async def get_transactions(transaction: data_models.Transaction):
 async def import_transactions():
     trans = await plaid_import.import_transactions()
     return trans
+
+
+@app.post("/transactions/update")
+async def update_transaction(transaction: data_models.Transaction):
+    dao = TransactionDAO()
+    # TODO: data validation to make sure this account is valid.
+    dao.update_transaction(transaction)
+    return {"success": True}
 
 
 @app.get("/users/")
