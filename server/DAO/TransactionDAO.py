@@ -1,4 +1,5 @@
 from database import Database
+import mysql.connector
 
 
 class TransactionDAO:
@@ -32,7 +33,7 @@ class TransactionDAO:
         cursor = self.db.connection.cursor()
         for transaction in transactions:
             sql = (
-                "INSERT INTO Transaction VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+                "INSERT INTO Transaction VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE pending = %s;")
             values = (transaction["id"],
                       transaction["account_id"],
                       transaction["date"],
@@ -44,13 +45,15 @@ class TransactionDAO:
                       transaction["notes"],
                       transaction["split"],
                       transaction["parent_transaction_id"],
-                      transaction["hidden_from_budget"])
+                      transaction["hidden_from_budget"],
+                      # Update the following on duplicate key
+                      transaction["pending"])
+
             cursor.execute(sql, values)
-            print("inserted: " + str(transaction["id"]))
 
         self.db.connection.commit()
         cursor.close()
-        print("complete")
+        print("Imported " + str(len(transactions)) + " transactions")
 
 
 dummy_transactions = [
