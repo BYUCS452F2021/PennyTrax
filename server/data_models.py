@@ -21,7 +21,7 @@ class SimpleAccount(BaseModel):
 
 class Transaction(BaseModel):
     id: str
-    account_id: int
+    account_id: str
     date: str
     amount: float
     pending: bool
@@ -36,7 +36,7 @@ class Transaction(BaseModel):
 
 class TS(BaseModel):
     id: str
-    account_id: int
+    account_id: str
 
 
 class PlaidSignInResult(BaseModel):

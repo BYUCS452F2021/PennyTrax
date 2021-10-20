@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import data_models
 import plaid
 import link
+import plaid_import
 from DAO import UserDAO, AuthTokenDAO, AccountDAO, TransactionDAO
 # TODO: any time you add new DAO's, edit DAO/__init__.py for cleaner imports.
 
@@ -132,12 +133,6 @@ async def get_transactions():
     return dao.get_transactions()
 
 
-@app.get("/transactions/add")
-async def get_transactions():
-    dao = TransactionDAO()
-    return dao.get_transactions()
-
-
 @app.post("/transactions/add")
 async def get_transactions(transaction: data_models.Transaction):
     dao = TransactionDAO()
@@ -145,6 +140,12 @@ async def get_transactions(transaction: data_models.Transaction):
     dao.add_transaction(transaction)
     print(transaction.account_id)
     return {"success": True}
+
+
+@app.post("/transactions/import")
+async def import_transactions():
+    trans = await plaid_import.import_transactions()
+    return trans
 
 
 @app.get("/users/")

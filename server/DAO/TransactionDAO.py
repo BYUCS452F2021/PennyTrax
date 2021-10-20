@@ -28,6 +28,30 @@ class TransactionDAO:
         self.db.connection.commit()
         cursor.close()
 
+    def import_transactions(self, transactions):
+        cursor = self.db.connection.cursor()
+        for transaction in transactions:
+            sql = (
+                "INSERT INTO Transaction VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+            values = (transaction["id"],
+                      transaction["account_id"],
+                      transaction["date"],
+                      transaction["amount"],
+                      transaction["pending"],
+                      transaction["merchant_name"],
+                      transaction["description"],
+                      transaction["category"],
+                      transaction["notes"],
+                      transaction["split"],
+                      transaction["parent_transaction_id"],
+                      transaction["hidden_from_budget"])
+            cursor.execute(sql, values)
+            print("inserted: " + str(transaction["id"]))
+
+        self.db.connection.commit()
+        cursor.close()
+        print("complete")
+
 
 dummy_transactions = [
     {
