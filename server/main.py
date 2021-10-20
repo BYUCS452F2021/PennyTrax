@@ -1,12 +1,12 @@
-import hashlib
 #! /usr/bin/env python3
+import hashlib
 import uvicorn
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 import data_models
 import plaid
 import link
-from DAO import UserDAO, AuthTokenDAO, AccountDAO
+from DAO import UserDAO, AuthTokenDAO, AccountDAO, TransactionDAO
 # TODO: any time you add new DAO's, edit DAO/__init__.py for cleaner imports.
 
 app = FastAPI()
@@ -124,6 +124,12 @@ async def transactions_test():
     end = "2021-01-30"
     trans = await plaid.get_transactions(at, start, end)
     return trans
+
+
+@app.get("/transactions")
+async def get_transactions():
+    dao = TransactionDAO()
+    return dao.get_transactions()
 
 
 @app.get("/users/")
