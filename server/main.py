@@ -132,6 +132,21 @@ async def get_transactions():
     return dao.get_transactions()
 
 
+@app.get("/transactions/add")
+async def get_transactions():
+    dao = TransactionDAO()
+    return dao.get_transactions()
+
+
+@app.post("/transactions/add")
+async def get_transactions(transaction: data_models.Transaction):
+    dao = TransactionDAO()
+    # TODO: data validation to make sure this account is valid.
+    dao.add_transaction(transaction)
+    print(transaction.account_id)
+    return {"success": True}
+
+
 @app.get("/users/")
 async def get_all_users():
     dao = UserDAO()
@@ -179,6 +194,8 @@ async def login(request: data_models.LoginRequest):
     else:
         auth_token = auth_token_dao.create_auth_token(user["id"])
         return {"success": True, "auth_token": auth_token}
+
+
 if __name__ == "__main__":
     # You can just run ./main.py to start the API now
     # (or python3 main.py if your interpreter is giving you trouble)

@@ -1,3 +1,33 @@
+from database import Database
+
+
+class TransactionDAO:
+    def __init__(self):
+        self.db = Database()
+
+    def get_transactions(self, id=None):
+        return dummy_transactions
+
+    def add_transaction(self, transaction):
+        cursor = self.db.connection.cursor()
+        sql = (
+            "INSERT INTO Transaction VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+        values = (transaction.id,
+                  transaction.account_id,
+                  transaction.date,
+                  transaction.amount,
+                  transaction.pending,
+                  transaction.merchant_name,
+                  transaction.description,
+                  transaction.category,
+                  transaction.notes,
+                  transaction.split,
+                  transaction.parent_transaction_id,
+                  transaction.hidden_from_budget)
+        cursor.execute(sql, values)
+        self.db.connection.commit()
+        cursor.close()
+
 
 dummy_transactions = [
     {
@@ -40,14 +70,3 @@ dummy_transactions = [
         "hidden_from_budget": False
     }
 ]
-
-
-# TODO: everything.
-
-class TransactionDAO:
-    def __init__(self):
-        # Init DB connection
-        pass
-
-    def get_transactions(self, id=None):
-        return dummy_transactions

@@ -19,6 +19,26 @@ class SimpleAccount(BaseModel):
     current_balance: float
 
 
+class Transaction(BaseModel):
+    id: str
+    account_id: int
+    date: str
+    amount: float
+    pending: bool
+    merchant_name: str
+    description: str
+    category: str
+    notes: str
+    split: bool
+    parent_transaction_id: str
+    hidden_from_budget: bool
+
+
+class TS(BaseModel):
+    id: str
+    account_id: int
+
+
 class PlaidSignInResult(BaseModel):
     user_id: int
     public_token: str
