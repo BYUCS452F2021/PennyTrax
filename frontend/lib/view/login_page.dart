@@ -29,6 +29,8 @@ class _LoginPageState extends State<LoginPage> {
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
             hintText: 'Email',
+            fillColor: Colors.white,
+            filled: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(50.0))),
@@ -42,6 +44,8 @@ class _LoginPageState extends State<LoginPage> {
         obscureText: true,
         decoration: InputDecoration(
             hintText: 'Password',
+            fillColor: Colors.white,
+            filled: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(50.0))),

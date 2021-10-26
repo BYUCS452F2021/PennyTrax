@@ -32,6 +32,8 @@ class _RegisterPageState extends State<RegisterPage> {
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
             hintText: 'First name',
+            fillColor: Colors.white,
+            filled: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(50.0))),
@@ -45,6 +47,8 @@ class _RegisterPageState extends State<RegisterPage> {
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
             hintText: 'Last name',
+            fillColor: Colors.white,
+            filled: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(50.0))),
@@ -58,6 +62,8 @@ class _RegisterPageState extends State<RegisterPage> {
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
             hintText: 'Email',
+            fillColor: Colors.white,
+            filled: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(50.0))),
@@ -72,6 +78,8 @@ class _RegisterPageState extends State<RegisterPage> {
         obscureText: true,
         decoration: InputDecoration(
             hintText: 'Password',
+            fillColor: Colors.white,
+            filled: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(50.0))),
