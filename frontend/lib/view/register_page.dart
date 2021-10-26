@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/view/login_page.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:uuid/uuid.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 var uuid = const Uuid();
 
@@ -147,7 +148,24 @@ class _RegisterPageState extends State<RegisterPage> {
     };
 
     ServerFacade.registerUser(register).then((value) {
-      print("User registered");
+      if(!value) {
+        print('Register was unsuccessful');
+        Fluttertoast.showToast(
+        msg: 'Register was unsuccessful',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 3,
+        backgroundColor: Colors.white,
+        textColor: Colors.red,
+        fontSize: 24.0,
+        webBgColor: "#ffffff",
+        webPosition: 'center'
+    );
+      }
+      else {
+        print("User registered!");
+        //Navigate to main page
+      }
     }, onError: (error) {
       print(error);
     });

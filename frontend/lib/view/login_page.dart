@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/view/register_page.dart';
 import 'package:frontend/network/server_facade.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // ignore: use_key_in_widget_constructors
 
@@ -103,7 +104,24 @@ class _LoginPageState extends State<LoginPage> {
     };
 
     ServerFacade.loginUser(login).then((value) {
-      print("User logged in");
+      if(!value['success']) {
+        print(value['message']);
+        Fluttertoast.showToast(
+        msg: value['message'],
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 3,
+        backgroundColor: Colors.white,
+        textColor: Colors.red,
+        fontSize: 24.0,
+        webBgColor: "#ffffff",
+        webPosition: 'center'
+    );
+      }
+      else {
+        print("User logged in!");
+        //Navigate to main page
+      }
     }, onError: (error) {
       print(error);
     });
