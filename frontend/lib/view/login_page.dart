@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/view/register_page.dart';
 import 'package:frontend/network/server_facade.dart';
+<<<<<<< HEAD
 import 'package:frontend/navigation.dart';
+=======
+import 'package:fluttertoast/fluttertoast.dart';
+>>>>>>> e709c32f9b79b515c35aa2bfecf6a99e8a328ee8
 
 // ignore: use_key_in_widget_constructors
 
@@ -17,20 +21,21 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final logo = Padding(
-      padding: EdgeInsets.all(20),
-      child: Hero(
-          tag: 'hero',
-          child: CircleAvatar(
-            radius: 100.0,
-            child: Image.asset('assets/PennyTrax.png'),
-          )),
+      padding: EdgeInsets.all(30),
+      child: Image.asset(
+        'assets/PennyTraxLogo.png',
+        fit: BoxFit.cover,
+      ),
     );
+
     final inputEmail = Padding(
       padding: EdgeInsets.only(bottom: 10),
       child: TextField(
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
             hintText: 'Email',
+            fillColor: Colors.white,
+            filled: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(50.0))),
@@ -44,6 +49,8 @@ class _LoginPageState extends State<LoginPage> {
         obscureText: true,
         decoration: InputDecoration(
             hintText: 'Password',
+            fillColor: Colors.white,
+            filled: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(50.0))),
@@ -90,6 +97,7 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
+      backgroundColor: const Color(0xff3d4761),
     ));
   }
 
@@ -100,10 +108,27 @@ class _LoginPageState extends State<LoginPage> {
     };
 
     ServerFacade.loginUser(login).then((value) {
-      Navigator.pushReplacement(
+      if(!value['success']) {
+        print(value['message']);
+        Fluttertoast.showToast(
+        msg: value['message'],
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 3,
+        backgroundColor: Colors.white,
+        textColor: Colors.red,
+        fontSize: 24.0,
+        webBgColor: "#ffffff",
+        webPosition: 'center'
+    );
+      }
+      else {
+        print("User logged in!");
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => AppNavigation()),
           );
+      }
     }, onError: (error) {
       print(error);
     });

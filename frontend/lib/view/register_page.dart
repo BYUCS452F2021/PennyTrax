@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/view/login_page.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:uuid/uuid.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 var uuid = const Uuid();
 
@@ -19,13 +20,11 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final logo = Padding(
-      padding: EdgeInsets.all(20),
-      child: Hero(
-          tag: 'hero',
-          child: CircleAvatar(
-            radius: 100.0,
-            child: Image.asset('assets/PennyTrax.png'),
-          )),
+      padding: EdgeInsets.all(30),
+      child: Image.asset(
+        'assets/PennyTraxLogo.png',
+        fit: BoxFit.cover,
+      ),
     );
 
     final inputFirstName = Padding(
@@ -34,6 +33,8 @@ class _RegisterPageState extends State<RegisterPage> {
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
             hintText: 'First name',
+            fillColor: Colors.white,
+            filled: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(50.0))),
@@ -47,6 +48,8 @@ class _RegisterPageState extends State<RegisterPage> {
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
             hintText: 'Last name',
+            fillColor: Colors.white,
+            filled: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(50.0))),
@@ -60,6 +63,8 @@ class _RegisterPageState extends State<RegisterPage> {
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
             hintText: 'Email',
+            fillColor: Colors.white,
+            filled: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(50.0))),
@@ -74,6 +79,8 @@ class _RegisterPageState extends State<RegisterPage> {
         obscureText: true,
         decoration: InputDecoration(
             hintText: 'Password',
+            fillColor: Colors.white,
+            filled: true,
             contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(50.0))),
@@ -109,23 +116,25 @@ class _RegisterPageState extends State<RegisterPage> {
         });
 
     return SafeArea(
-        child: Scaffold(
-      body: Center(
-        child: ListView(
-          shrinkWrap: true,
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          children: <Widget>[
-            logo,
-            inputFirstName,
-            inputLastName,
-            inputEmail,
-            inputPassword,
-            buttonRegister,
-            buttonLogin
-          ],
+      child: Scaffold(
+        body: Center(
+          child: ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            children: <Widget>[
+              logo,
+              inputFirstName,
+              inputLastName,
+              inputEmail,
+              inputPassword,
+              buttonRegister,
+              buttonLogin
+            ],
+          ),
         ),
+        backgroundColor: const Color(0xff3d4761),
       ),
-    ));
+    );
   }
 
   void registerUser() {
@@ -139,7 +148,24 @@ class _RegisterPageState extends State<RegisterPage> {
     };
 
     ServerFacade.registerUser(register).then((value) {
-      print("User registered");
+      if(!value) {
+        print('Register was unsuccessful');
+        Fluttertoast.showToast(
+        msg: 'Register was unsuccessful',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 3,
+        backgroundColor: Colors.white,
+        textColor: Colors.red,
+        fontSize: 24.0,
+        webBgColor: "#ffffff",
+        webPosition: 'center'
+    );
+      }
+      else {
+        print("User registered!");
+        //Navigate to main page
+      }
     }, onError: (error) {
       print(error);
     });
