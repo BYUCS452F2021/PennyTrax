@@ -33,7 +33,9 @@ class _TransactionsState extends State<Transactions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Appbar would go here
+      appBar: AppBar(
+        title: const Text('Transactions')
+      ),
       body: Center(
         child: RefreshIndicator(
           child: ListView.builder(
@@ -49,24 +51,32 @@ class _TransactionsState extends State<Transactions> {
   }
 Widget transactionRow(transaction) {
     return Padding(
-      padding: const EdgeInsets.only(left: 5, right: 10, top: 15),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${transaction["description"]}',
-            style: const TextStyle(fontSize: 17),
-          ),
-          Text(
-            '${transaction["merchant_name"]}',
-            style: const TextStyle(fontSize: 15),
-          ),
-          Text(
-            '${transaction["date"]} ${transaction["amount"]}',
-            style: const TextStyle(fontSize: 13),
-          )
-        ],
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
+      child: Card(
+        elevation: 0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [          
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                transaction["merchant_name"],
+                style: const TextStyle(fontSize: 17),
+              ),
+              Text(
+                transaction["description"],
+                style: const TextStyle(fontSize: 15),
+              ),
+              Text(
+                transaction["date"],
+                style: const TextStyle(fontSize: 13),
+              )
+            ]),
+            Text('\$${transaction["amount"]}', style: const TextStyle(fontSize: 24))
+          ],
+        )
       ),
     );
   }
