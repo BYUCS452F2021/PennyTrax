@@ -19,6 +19,7 @@ class _TransactionsState extends State<Transactions> {
 
   Future<void> fetchTransactions() async {
     List account_ids = ["G9mn4EDXGatApajnw6rnSdakjWX5mxf1DNn7a"];
+    // TODO: get these account_ids when the user logs in and store them somewhere globally accessible.
     ServerFacade.getTransactions(account_ids).then((value) {
       setState(() {
         transactionData = value;
