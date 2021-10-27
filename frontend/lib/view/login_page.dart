@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/view/register_page.dart';
 import 'package:frontend/network/server_facade.dart';
-<<<<<<< HEAD
 import 'package:frontend/navigation.dart';
-=======
 import 'package:fluttertoast/fluttertoast.dart';
->>>>>>> e709c32f9b79b515c35aa2bfecf6a99e8a328ee8
 
 // ignore: use_key_in_widget_constructors
 
