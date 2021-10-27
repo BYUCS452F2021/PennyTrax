@@ -1,12 +1,13 @@
-import hashlib
 #! /usr/bin/env python3
+import hashlib
 import uvicorn
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 import data_models
 import plaid
 import link
-from DAO import UserDAO, AuthTokenDAO, AccountDAO
+import plaid_import
+from DAO import UserDAO, AuthTokenDAO, AccountDAO, TransactionDAO
 # TODO: any time you add new DAO's, edit DAO/__init__.py for cleaner imports.
 
 app = FastAPI()
@@ -32,7 +33,8 @@ async def root():
 @app.get("/accounts")
 async def get_accounts():
     dao = AccountDAO()
-    return dao.get_institutions_accounts()
+    user_id = 1
+    return dao.get_institutions_accounts(user_id)
 
 # @app.get("/accounts/{id}")
 # async def get_account(id):
@@ -126,6 +128,34 @@ async def transactions_test():
     return trans
 
 
+@app.post("/transactions")
+async def get_transactions(request: data_models.GetTransactionRequest):
+    dao = TransactionDAO()
+    return dao.get_transactions(request.account_ids)
+
+
+@app.post("/transactions/add")
+async def get_transactions(transaction: data_models.Transaction):
+    dao = TransactionDAO()
+    # TODO: data validation to make sure this account is valid.
+    dao.add_transaction(transaction)
+    return {"success": True}
+
+
+@app.post("/transactions/import")
+async def import_transactions():
+    trans = await plaid_import.import_transactions()
+    return trans
+
+
+@app.post("/transactions/update")
+async def update_transaction(transaction: data_models.Transaction):
+    dao = TransactionDAO()
+    # TODO: data validation to make sure this account is valid.
+    dao.update_transaction(transaction)
+    return {"success": True}
+
+
 @app.get("/users/")
 async def get_all_users():
     dao = UserDAO()
@@ -173,6 +203,8 @@ async def login(request: data_models.LoginRequest):
     else:
         auth_token = auth_token_dao.create_auth_token(user["id"])
         return {"success": True, "auth_token": auth_token}
+
+
 if __name__ == "__main__":
     # You can just run ./main.py to start the API now
     # (or python3 main.py if your interpreter is giving you trouble)

@@ -45,6 +45,16 @@ class ServerFacade {
     return await postRequest('accounts/add', body);
   }
 
+  /* Get all of a users accounts account */
+  static Future<dynamic> getTransactions(List account_ids) async {
+    Map body = {
+      "account_ids": account_ids
+    };
+    // var response = await http.post(Uri.parse(serverURL + 'transactions'), body);
+    var response = await postRequest('transactions', body);
+    return response;
+  }
+
   /* Create post request */
   static Future<dynamic> postRequest(String endpoint, Map body) async {
     return await http.post(
