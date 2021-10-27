@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/view/register_page.dart';
 import 'package:frontend/network/server_facade.dart';
+<<<<<<< HEAD
+import 'package:frontend/navigation.dart';
+=======
 import 'package:fluttertoast/fluttertoast.dart';
+>>>>>>> e709c32f9b79b515c35aa2bfecf6a99e8a328ee8
 
 // ignore: use_key_in_widget_constructors
 
@@ -63,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
           color: Colors.black87,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-          onPressed: loginUser,
+          onPressed: () => loginUser(context),
         ),
       ),
     );
@@ -97,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
     ));
   }
 
-  void loginUser() {
+  void loginUser(BuildContext context) {
     Map<String, String> login = {
       'email': emailController.text,
       'password': passwordController.text
@@ -120,7 +124,10 @@ class _LoginPageState extends State<LoginPage> {
       }
       else {
         print("User logged in!");
-        //Navigate to main page
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AppNavigation()),
+          );
       }
     }, onError: (error) {
       print(error);
