@@ -56,27 +56,32 @@ dummy_accounts = [
         ]
     }
 ]
-    
+
 
 #TODO: everything.
+from database import Database
 
 class AccountDAO:
     def __init__(self):
-        # Init DB connection
-        pass
+        self.db = Database()
 
-    def get_institutions_accounts(self):
-        return dummy_accounts
+    def get_institutions_accounts(self, user_id):
+        cursor = self.db.connection.cursor(dictionary=True)
+        cursor.execute("SELECT name as financial_institution_name, id FROM FinancialInstitution WHERE user_id=" + str(user_id) + ";")
+        institutions = cursor.fetchall()
 
-    def get_accounts(self, id=None):
-        # Do we still want to support
-        # getting a single account by id?
-        pass
-        # print("ID IS", id)
-        # if id is None:
-        #     return dummy_accounts
-        # else:
-        #     return dummy_accounts[0]
+        formatted_ids = ",".join([str(x['id']) for x in institutions])
+        cursor.execute("SELECT * FROM FinancialAccount WHERE financial_institution_id IN (" + formatted_ids + ") ;")
+        accounts = cursor.fetchall()
+
+        # This is O(nm) which is too slow. TODO: find a more efficient way to do this
+        for ins in institutions:
+            ins['accounts'] = []
+            for acc in accounts:
+                if acc['financial_institution_id'] == ins['id']:
+                    ins['accounts'].append(acc)
+
+        return institutions
 
     def add_account(self, account):
         return 101

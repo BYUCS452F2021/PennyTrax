@@ -33,7 +33,8 @@ async def root():
 @app.get("/accounts")
 async def get_accounts():
     dao = AccountDAO()
-    return dao.get_institutions_accounts()
+    user_id = 1
+    return dao.get_institutions_accounts(user_id)
 
 # @app.get("/accounts/{id}")
 # async def get_account(id):
