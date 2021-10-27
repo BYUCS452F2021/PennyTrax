@@ -50,8 +50,9 @@ class _TransactionsState extends State<Transactions> {
 Widget transactionRow(transaction) {
     return Padding(
       padding: const EdgeInsets.only(left: 5, right: 10, top: 15),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             '${transaction["description"]}',
