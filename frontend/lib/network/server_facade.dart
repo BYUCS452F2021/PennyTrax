@@ -23,7 +23,7 @@ class ServerFacade {
   /*
   * Registers user on the server
   */
-  static Future<bool> registerUser(Map body) async {
+  static Future<dynamic> registerUser(Map body) async {
     return await postRequest('register/', body);
   }
 

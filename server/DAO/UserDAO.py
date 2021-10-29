@@ -47,7 +47,7 @@ class UserDAO:
         result = cursor.fetchall()
         cursor.close()
 
-        if len(result) == 1:
+        if len(result) > 0:
             userData = result[0]
             user = {}
             user["id"] = userData[0]

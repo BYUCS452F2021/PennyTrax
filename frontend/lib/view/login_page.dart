@@ -104,27 +104,25 @@ class _LoginPageState extends State<LoginPage> {
       'password': passwordController.text
     };
 
-    ServerFacade.loginUser(login).then((value) {
-      if(!value['success']) {
-        print(value['message']);
+    ServerFacade.loginUser(login).then((response) {
+      if (!response['success']) {
+        print(response['message']);
         Fluttertoast.showToast(
-        msg: value['message'],
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 3,
-        backgroundColor: Colors.white,
-        textColor: Colors.red,
-        fontSize: 24.0,
-        webBgColor: "#ffffff",
-        webPosition: 'center'
-    );
-      }
-      else {
+            msg: response['message'],
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.white,
+            textColor: Colors.red,
+            fontSize: 24.0,
+            webBgColor: "#ffffff",
+            webPosition: 'center');
+      } else {
         print("User logged in!");
         Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => AppNavigation()),
-          );
+          context,
+          MaterialPageRoute(builder: (context) => AppNavigation()),
+        );
       }
     }, onError: (error) {
       print(error);

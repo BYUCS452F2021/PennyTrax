@@ -144,8 +144,8 @@ async def get_transactions(transaction: data_models.Transaction):
 
 @app.post("/transactions/import")
 async def import_transactions():
-    trans = await plaid_import.import_transactions()
-    return trans
+    await plaid_import.import_transactions()
+    return {"success": True}
 
 
 @app.post("/transactions/update")
@@ -172,6 +172,9 @@ async def get_user(user_id: int):
 async def register(request: data_models.RegisterRequest):
     dao = UserDAO()
 
+    if dao.get_user_by_email(request.email):
+        return {"success": False, "message": "Email already exists"}
+
     salted_pass = request.password + request.salt
     hashed_pass = hashlib.sha256(salted_pass.encode('utf-8')).hexdigest()
 
@@ -182,7 +185,7 @@ async def register(request: data_models.RegisterRequest):
         "password": hashed_pass,
         "salt": request.salt
     })
-    return True
+    return {"success": True}
 
 
 @app.post("/login/")

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/navigation.dart';
 import 'package:frontend/view/login_page.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:uuid/uuid.dart';
@@ -147,24 +148,25 @@ class _RegisterPageState extends State<RegisterPage> {
       'salt': salt,
     };
 
-    ServerFacade.registerUser(register).then((value) {
-      if(!value) {
+    ServerFacade.registerUser(register).then((response) {
+      if (!response['success']) {
         print('Register was unsuccessful');
         Fluttertoast.showToast(
-        msg: 'Register was unsuccessful',
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 3,
-        backgroundColor: Colors.white,
-        textColor: Colors.red,
-        fontSize: 24.0,
-        webBgColor: "#ffffff",
-        webPosition: 'center'
-    );
-      }
-      else {
+            msg: response['message'],
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.white,
+            textColor: Colors.red,
+            fontSize: 24.0,
+            webBgColor: "#ffffff",
+            webPosition: 'center');
+      } else {
         print("User registered!");
-        //Navigate to main page
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => AppNavigation()),
+        );
       }
     }, onError: (error) {
       print(error);
