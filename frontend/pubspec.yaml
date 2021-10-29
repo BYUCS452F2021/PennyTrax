@@ -38,6 +38,7 @@ dependencies:
     url_launcher: ^6.0.12
     url_launcher_web: ^2.0.4
     http: ^0.13.3
+    intl: ^0.17.0
 
 dev_dependencies:
     flutter_test:
