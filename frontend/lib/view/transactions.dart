@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:intl/intl.dart';
 import 'package:frontend/globals.dart' as globals;
+import 'package:frontend/view/edit_transactions.dart';
 
 class Transactions extends StatefulWidget {
   const Transactions({Key? key}) : super(key: key);
@@ -52,37 +53,45 @@ class _TransactionsState extends State<Transactions> {
   Widget transactionRow(transaction) {
     return Padding(
       padding: const EdgeInsets.only(left: 5, right: 5),
-      child: Card(
-          elevation: 2,
-          child: Padding(
-              padding:
-                  const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(transaction["merchant_name"],
-                            style: const TextStyle(fontSize: 19)),
-                        if (transaction["merchant_name"] !=
-                            transaction["description"])
-                          // Only show the description if it's different than the merchant name
+      child: GestureDetector(
+          child: Card(
+              elevation: 2,
+              child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 8, right: 8, top: 8, bottom: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(transaction["merchant_name"],
+                              style: const TextStyle(fontSize: 19)),
+                          if (transaction["merchant_name"] !=
+                              transaction["description"])
+                            // Only show the description if it's different than the merchant name
+                            Text(
+                              transaction["description"],
+                              style: const TextStyle(
+                                  fontSize: 13, fontStyle: FontStyle.italic),
+                            ),
                           Text(
-                            transaction["description"],
-                            style: const TextStyle(
-                                fontSize: 13, fontStyle: FontStyle.italic),
-                          ),
-                        Text(
-                          transaction["date"],
-                          style: const TextStyle(fontSize: 13),
-                        )
-                      ]),
-                  Text(moneyFormat.format(transaction["amount"]),
-                      style: const TextStyle(fontSize: 21))
-                ],
-              ))),
+                            transaction["date"],
+                            style: const TextStyle(fontSize: 13),
+                          )
+                        ],
+                      ),
+                      Text(moneyFormat.format(transaction["amount"]),
+                          style: const TextStyle(fontSize: 21))
+                    ],
+                  ))),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => EditTransactions(transaction: transaction)),
+            );
+          }),
     );
   }
 }
