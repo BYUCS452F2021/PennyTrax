@@ -16,8 +16,10 @@ class UserDAO:
                   user_data["password"],
                   user_data["salt"])
         cursor.execute(sql, values)
+        id = cursor.lastrowid
         self.db.connection.commit()
         cursor.close()
+        return id
 
     def get_user(self, id):
         cursor = self.db.connection.cursor()

@@ -171,6 +171,7 @@ async def get_user(user_id: int):
 @app.post("/register/")
 async def register(request: data_models.RegisterRequest):
     dao = UserDAO()
+    auth_token_dao = AuthTokenDAO()
 
     if dao.get_user_by_email(request.email):
         return {"success": False, "message": "Email already exists"}
@@ -178,14 +179,15 @@ async def register(request: data_models.RegisterRequest):
     salted_pass = request.password + request.salt
     hashed_pass = hashlib.sha256(salted_pass.encode('utf-8')).hexdigest()
 
-    dao.create_user({
+    user_id = dao.create_user({
         "first_name": request.first_name,
         "last_name": request.last_name,
         "email": request.email,
         "password": hashed_pass,
         "salt": request.salt
     })
-    return {"success": True}
+    auth_token = auth_token_dao.create_auth_token(user_id)
+    return {"success": True, "auth_token": auth_token}
 
 
 @app.post("/login/")

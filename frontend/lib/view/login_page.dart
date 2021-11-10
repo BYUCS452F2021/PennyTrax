@@ -3,6 +3,7 @@ import 'package:frontend/view/register_page.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:frontend/navigation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frontend/globals.dart' as globals;
 
 // ignore: use_key_in_widget_constructors
 
@@ -119,6 +120,8 @@ class _LoginPageState extends State<LoginPage> {
             webPosition: 'center');
       } else {
         print("User logged in!");
+        globals.authToken = response["auth_token"];
+        print(globals.authToken);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => AppNavigation()),

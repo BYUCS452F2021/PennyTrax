@@ -4,6 +4,7 @@ import 'package:frontend/view/login_page.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:uuid/uuid.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frontend/globals.dart' as globals;
 
 var uuid = const Uuid();
 
@@ -163,6 +164,8 @@ class _RegisterPageState extends State<RegisterPage> {
             webPosition: 'center');
       } else {
         print("User registered!");
+        globals.authToken = response["auth_token"];
+        print(globals.authToken);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => AppNavigation()),

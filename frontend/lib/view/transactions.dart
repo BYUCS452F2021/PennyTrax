@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:intl/intl.dart';
+import 'package:frontend/globals.dart' as globals;
 
 class Transactions extends StatefulWidget {
   const Transactions({Key? key}) : super(key: key);
@@ -19,9 +20,9 @@ class _TransactionsState extends State<Transactions> {
   }
 
   Future<void> fetchTransactions() async {
-    List account_ids = ["G9mn4EDXGatApajnw6rnSdakjWX5mxf1DNn7a", "abc123"];
     // TODO: get these account_ids when the user logs in and store them somewhere globally accessible.
-    ServerFacade.getTransactions(account_ids).then((value) {
+    print("authToken: " + globals.authToken);
+    ServerFacade.getTransactions(globals.account_ids).then((value) {
       setState(() {
         transactionData = value;
       });
@@ -64,14 +65,14 @@ class _TransactionsState extends State<Transactions> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(transaction["merchant_name"],
-                            style: const TextStyle(
-                                fontSize: 19)),
+                            style: const TextStyle(fontSize: 19)),
                         if (transaction["merchant_name"] !=
                             transaction["description"])
                           // Only show the description if it's different than the merchant name
                           Text(
                             transaction["description"],
-                            style: const TextStyle(fontSize: 13, fontStyle: FontStyle.italic),
+                            style: const TextStyle(
+                                fontSize: 13, fontStyle: FontStyle.italic),
                           ),
                         Text(
                           transaction["date"],
