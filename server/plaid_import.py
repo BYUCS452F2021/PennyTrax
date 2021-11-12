@@ -1,15 +1,30 @@
 import plaid
+from DAO import AccountDAO
 from DAO import TransactionDAO
 
-# Imports transactions from plaid and adds or updates them in the Transactions table
-async def import_transactions():
-    at = "access-sandbox-50ff7ceb-ebdc-40e8-ae22-27146fb1bed4"
+# Imports transactions and account balances from plaid and adds or updates them in the Transaction and FinancialAccount table
+
+async def import_transactions(access_token):
     start = "2021-01-01"
     end = "2021-01-30"
-    plaid_trans = await plaid.get_transactions(at, start, end)
-    transactions = []
+    plaid_trans = await plaid.get_transactions(access_token, start, end)
+    print(plaid_trans)
+
+    # Convert plaid account model to pennytrax model
+    accounts = []
+    for account in plaid_trans["accounts"]:
+        accounts.append({
+            "id": account["account_id"],
+            "available_balance": account["balances"]["available"],
+            "current_balance": account["balances"]["current"],
+        })
+
+    # Update accounts in the database
+    account_dao = AccountDAO()
+    account_dao.update_accounts(accounts)
 
     # Convert plaid transaction model to pennytrax model
+    transactions = []
     for tran in plaid_trans["transactions"]:
         transactions.append({
             "id": tran["transaction_id"],

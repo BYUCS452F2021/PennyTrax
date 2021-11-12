@@ -61,6 +61,7 @@ curl localhost:8000/accounts/add -H "Content-Type: application/json" -d \
 
 # Institutions / Linking
 
+
 @app.post("/institutions/add")
 async def add_institution():
     # Not sure how to handle user yet.
@@ -104,15 +105,16 @@ async def link_store_token(data: data_models.PlaidSignInResult):
     print("Got Public Token", data.public_token, "for user", data.user_id)
     access_token = await plaid.get_access_token(data.public_token)
     print("Exchanged for Access Token:", access_token)
-    # TODO: store the user id & access token in the FinancialInstitutions table
+
+    # Add financial institution and accounts to database
     dao = AccountDAO()
     financial_institution_id = dao.add_institution(
         data.user_id, data.name, access_token)
     dao.add_institution_accounts(
         data.user_id, financial_institution_id, data.accounts)
 
-    # Maybe kick off a download process of transactions using this new access token,
-    # and fill the database with them?
+    # Import account balances and transactions
+    await plaid_import.import_transactions(access_token)
 
     # Note: use plaid.get_transactions(access_token, start, end)
 
@@ -149,7 +151,8 @@ async def get_transactions(transaction: data_models.Transaction):
 
 @app.post("/transactions/import")
 async def import_transactions():
-    await plaid_import.import_transactions()
+    access_token = "access-sandbox-34cbd206-7df6-4721-b5ff-5df4ea57dd94"
+    await plaid_import.import_transactions(access_token)
     return {"success": True}
 
 

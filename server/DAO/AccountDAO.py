@@ -117,6 +117,19 @@ class AccountDAO:
         self.db.connection.commit()
         cursor.close()
 
+    def update_accounts(self, accounts):
+        cursor = self.db.connection.cursor()
+        sql = (
+            "UPDATE FinancialAccount SET available_balance=%s, current_balance=%s WHERE id=%s")
+        for account in accounts:
+            values = (account["available_balance"],
+                      account["current_balance"],
+                      account["id"])
+            cursor.execute(sql, values)
+
+        self.db.connection.commit()
+        cursor.close()
+
     def add_institution(self, user_id, name, access_token):
         cursor = self.db.connection.cursor()
         sql = (
