@@ -29,7 +29,7 @@ class AuthTokenDAO:
         result = cursor.fetchall()
         cursor.close()
 
-        if len(result) == 1:
+        if len(result) >= 1:
             row = result[0]
             auth_token = {
                 "auth_token": row[0],
@@ -37,7 +37,7 @@ class AuthTokenDAO:
                 "expiration_date": row[2]
             }
             expiration_date = datetime.datetime.strptime(
-                auth_token["expiration_date"], '%Y-%m-%d %H:%M:%S.%f')
+                str(auth_token["expiration_date"]), '%Y-%m-%d %H:%M:%S')
             if expiration_date < datetime.datetime.now():
                 self.delete_auth_token(auth_token_str)
                 return None

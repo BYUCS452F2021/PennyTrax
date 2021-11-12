@@ -23,17 +23,17 @@ def get_link_html(user_id, link_token):
                 token:  link_token,
                 onSuccess: (public_token, metadata) => {
                     console.log("success", public_token, metadata);
-                    // this.public_token = public_token;
                     let data = {
                         user_id: user_id,
-                        public_token: public_token
+                        name: metadata["institution"]["name"],
+                        public_token: public_token,
+                        accounts: metadata["accounts"]
                     };
                     axios.post(BASE_URL+'/link/store_token', data)
                         .then((resp) => {
                             console.log(resp);
-                            // NAVIGATE
-                            window.location.href = BASE_URL + '/link/done';
-                    });
+                        }
+                    );
                 },
                 onLoad: () => {
                     console.log("load");
@@ -43,6 +43,10 @@ def get_link_html(user_id, link_token):
                 },
                 onEvent: (eventName, metadata) => {
                     console.log("event", eventName);
+                    if (eventName === "HANDOFF") {
+                        // NAVIGATE
+                        window.location.href = BASE_URL + '/link/done';
+                    }
                 },
                 receivedRedirectUri: null,
                 });
@@ -57,6 +61,7 @@ def get_link_html(user_id, link_token):
     </body>
     </html>
     """
+
 
 def get_done_html():
     return """

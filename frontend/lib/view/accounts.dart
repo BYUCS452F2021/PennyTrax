@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:frontend/view/add_cash_account.dart';
 import 'package:frontend/view/add_institution.dart';
+import 'package:frontend/globals.dart' as globals;
 
 class Accounts extends StatefulWidget {
   const Accounts({Key? key}) : super(key: key);
@@ -23,7 +24,7 @@ class _AccountsState extends State<Accounts> {
   }
 
   Future<void> fetchAccounts() async {
-    ServerFacade.getAccounts().then((value) {
+    ServerFacade.getAccounts(globals.authToken).then((value) {
       setState(() {
         accountData = value;
       });

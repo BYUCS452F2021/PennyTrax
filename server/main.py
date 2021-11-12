@@ -30,10 +30,11 @@ async def root():
 # Accounts:
 
 
-@app.get("/accounts")
-async def get_accounts():
+@app.get("/accounts/{auth_token}")
+async def get_accounts(auth_token: str):
     dao = AccountDAO()
-    user_id = 1
+    auth_dao = AuthTokenDAO()
+    user_id = auth_dao.verify_auth_token(auth_token)
     return dao.get_institutions_accounts(user_id)
 
 # @app.get("/accounts/{id}")
@@ -45,7 +46,7 @@ async def get_accounts():
 
 
 @app.post("/accounts/add")
-async def add_account(account: data_models.SimpleAccount):
+async def add_account(account: data_models.Account):
     dao = AccountDAO()
     # TODO: data validation to make sure this account is valid.
     acct_id = dao.add_account(account)
@@ -59,7 +60,6 @@ curl localhost:8000/accounts/add -H "Content-Type: application/json" -d \
 """
 
 # Institutions / Linking
-
 
 @app.post("/institutions/add")
 async def add_institution():
@@ -80,7 +80,7 @@ async def begin_link(link_token: str):
     """
     # TODO: get user auth token from http headers
     # determine the user id from that token
-    user_id = 101
+    user_id = 124
     html = link.get_link_html(user_id, link_token)
     return Response(content=html)
 
@@ -105,6 +105,11 @@ async def link_store_token(data: data_models.PlaidSignInResult):
     access_token = await plaid.get_access_token(data.public_token)
     print("Exchanged for Access Token:", access_token)
     # TODO: store the user id & access token in the FinancialInstitutions table
+    dao = AccountDAO()
+    financial_institution_id = dao.add_institution(
+        data.user_id, data.name, access_token)
+    dao.add_institution_accounts(
+        data.user_id, financial_institution_id, data.accounts)
 
     # Maybe kick off a download process of transactions using this new access token,
     # and fill the database with them?

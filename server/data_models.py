@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import Optional
 
 
 class Account(BaseModel):
@@ -9,6 +8,7 @@ class Account(BaseModel):
     name: str
     type: str
     subtype: str
+    mask: int
     available_balance: float
     current_balance: float
 
@@ -45,7 +45,9 @@ class TS(BaseModel):
 
 class PlaidSignInResult(BaseModel):
     user_id: int
+    name: str
     public_token: str
+    accounts: list
 
 
 class RegisterRequest(BaseModel):

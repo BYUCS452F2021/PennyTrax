@@ -35,8 +35,8 @@ class ServerFacade {
   }
   
 /* Get all of a users accounts account */
-  static Future<dynamic> getAccounts() async {
-    var response = await http.get(Uri.parse(serverURL + 'accounts'));
+  static Future<dynamic> getAccounts(String authToken) async {
+    var response = await http.get(Uri.parse(serverURL + 'accounts/' + authToken));
     return jsonDecode(response.body);
   }
 
