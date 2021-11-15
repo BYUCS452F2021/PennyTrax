@@ -157,7 +157,7 @@ async def get_transactions(request: data_models.SimpleRequest):
 
     # Get list of users accounts
     dao = AccountDAO()
-    account_ids = dao.get_accounts(user_id)
+    account_ids = dao.get_account_ids(user_id)
 
     dao = TransactionDAO()
     return dao.get_transactions(account_ids)

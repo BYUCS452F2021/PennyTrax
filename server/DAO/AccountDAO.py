@@ -102,7 +102,9 @@ class AccountDAO:
                 if acc['financial_institution_id'] == ins['id']:
                     ins['accounts'].append(acc)
 
-        return institutions
+        institution_results.extend(institutions)
+
+        return institution_results
 
     def get_institution_access_tokens(self, user_id):
         cursor = self.db.connection.cursor(dictionary=True)
@@ -116,7 +118,7 @@ class AccountDAO:
 
         return tokens
 
-    def get_accounts(self, user_id):
+    def get_account_ids(self, user_id):
         cursor = self.db.connection.cursor(dictionary=True)
         cursor.execute(
             "SELECT id FROM FinancialAccount WHERE user_id=" + str(user_id) + ";")
