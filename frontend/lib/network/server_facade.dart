@@ -10,8 +10,14 @@ class ServerFacade {
   /*
   * Gets link url from server
   */
-  static Future<InstitutionLinkResponse> addInstitution() async {
-    final response = await http.post(Uri.parse(serverURL + 'institutions/add'));
+  static Future<InstitutionLinkResponse> addInstitution(Map body) async {
+    final response = await http.post(
+      Uri.parse(serverURL + 'institutions/add'),
+      body: json.encode(body),
+      headers: {
+        'Content-type': 'application/json',
+      },
+    );
 
     if (response.statusCode == 200) {
       return InstitutionLinkResponse.fromJson(jsonDecode(response.body));

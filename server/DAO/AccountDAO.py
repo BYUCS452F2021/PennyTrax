@@ -69,6 +69,9 @@ class AccountDAO:
             "SELECT name as financial_institution_name, id FROM FinancialInstitution WHERE user_id=" + str(user_id) + ";")
         institutions = cursor.fetchall()
 
+        if len(institutions) == 0:
+            return []
+
         formatted_ids = ",".join([str(x['id']) for x in institutions])
         cursor.execute(
             "SELECT * FROM FinancialAccount WHERE financial_institution_id IN (" + formatted_ids + ") ;")

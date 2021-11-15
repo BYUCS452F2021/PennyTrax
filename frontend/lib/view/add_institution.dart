@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:frontend/model/institution_link_response.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:url_launcher/url_launcher.dart';
-//import 'dart:html' as html;
+import 'package:frontend/globals.dart' as globals;
 
 _launchURLBrowser(url) async {
   if (await canLaunch(url)) {
     await launch(url, forceWebView: true);
-    //html.window.open(url, "Add Institution");
   } else {
     throw 'Could not launch $url';
   }
@@ -28,7 +27,8 @@ class _AddInstitutionState extends State<AddInstitution> {
   @override
   void initState() {
     super.initState();
-    futureLinkResponse = ServerFacade.addInstitution();
+    Map body = {"authToken": globals.authToken};
+    futureLinkResponse = ServerFacade.addInstitution(body);
   }
 
   @override

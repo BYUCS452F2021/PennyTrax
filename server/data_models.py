@@ -19,7 +19,7 @@ class SimpleAccount(BaseModel):
     current_balance: float
 
 
-class GetTransactionRequest(BaseModel):
+class SimpleRequest(BaseModel):
     authToken: str
 
 

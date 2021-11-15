@@ -63,25 +63,26 @@ curl localhost:8000/accounts/add -H "Content-Type: application/json" -d \
 
 
 @app.post("/institutions/add")
-async def add_institution():
+async def add_institution(request: data_models.SimpleRequest):
+    auth_token_dao = AuthTokenDAO()
+    user_id = auth_token_dao.verify_auth_token(request.authToken)
     # Not sure how to handle user yet.
     token = await plaid.get_link_token(user='test user')
     # TODO: replace with real IP
-    url = "localhost:8000/link/begin/" + token
+    url = "localhost:8000/link/begin/" + token + "/" + str(user_id)
     # Do we need to try to obfuscate the token at all?
     return {
         "link_url": url
     }
 
 
-@app.get("/link/begin/{link_token}")
-async def begin_link(link_token: str):
+@app.get("/link/begin/{link_token}/{user_id}")
+async def begin_link(link_token: str, user_id: str):
     """Returns HTML content to be viewed in a web browser:
     A page where the end-user can sign in to a supported financial institution.
     """
     # TODO: get user auth token from http headers
     # determine the user id from that token
-    user_id = 124
     html = link.get_link_html(user_id, link_token)
     return Response(content=html)
 
@@ -136,7 +137,7 @@ async def transactions_test():
 
 
 @app.post("/transactions")
-async def get_transactions(request: data_models.GetTransactionRequest):
+async def get_transactions(request: data_models.SimpleRequest):
     auth_token_dao = AuthTokenDAO()
     user_id = auth_token_dao.verify_auth_token(request.authToken)
 
