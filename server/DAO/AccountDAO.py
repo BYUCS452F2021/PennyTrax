@@ -64,27 +64,10 @@ class AccountDAO:
         self.db = Database()
 
     def get_institutions_accounts(self, user_id):
-        cursor = self.db.connection.cursor(dictionary=True)
-        cursor.execute(
-            "SELECT name as financial_institution_name, id FROM FinancialInstitution WHERE user_id=" + str(user_id) + ";")
-        institutions = cursor.fetchall()
-
-        if len(institutions) == 0:
-            return []
-
-        formatted_ids = ",".join([str(x['id']) for x in institutions])
-        cursor.execute(
-            "SELECT * FROM FinancialAccount WHERE financial_institution_id IN (" + formatted_ids + ") ;")
-        accounts = cursor.fetchall()
-
-        # This is O(nm) which is too slow. TODO: find a more efficient way to do this
-        for ins in institutions:
-            ins['accounts'] = []
-            for acc in accounts:
-                if acc['financial_institution_id'] == ins['id']:
-                    ins['accounts'].append(acc)
+        institutions = []
 
         # Get Cash Accounts
+        cursor = self.db.connection.cursor(dictionary=True)
         cursor.execute(
             "SELECT * FROM FinancialAccount WHERE financial_institution_id IS NULL AND user_id=" + str(user_id) + ";")
         accounts = cursor.fetchall()
@@ -97,6 +80,27 @@ class AccountDAO:
             for account in accounts:
                 cash_accounts["accounts"].append(account)
             institutions.append(cash_accounts)
+
+        # Get plaid institutions
+        cursor.execute(
+            "SELECT name as financial_institution_name, id FROM FinancialInstitution WHERE user_id=" + str(user_id) + ";")
+        institution_results = cursor.fetchall()
+
+        if len(institution_results) == 0:
+            return institutions
+
+        # Get accounts for each institution
+        formatted_ids = ",".join([str(x['id']) for x in institution_results])
+        cursor.execute(
+            "SELECT * FROM FinancialAccount WHERE financial_institution_id IN (" + formatted_ids + ") ;")
+        accounts = cursor.fetchall()
+
+        # This is O(nm) which is too slow. TODO: find a more efficient way to do this
+        for ins in institution_results:
+            ins['accounts'] = []
+            for acc in accounts:
+                if acc['financial_institution_id'] == ins['id']:
+                    ins['accounts'].append(acc)
 
         return institutions
 
