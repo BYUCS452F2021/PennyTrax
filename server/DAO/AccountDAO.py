@@ -83,6 +83,18 @@ class AccountDAO:
 
         return institutions
 
+    def get_accounts(self, user_id):
+        cursor = self.db.connection.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT id FROM FinancialAccount WHERE user_id=" + str(user_id) + ";")
+        results = cursor.fetchall()
+
+        accounts = []
+        for account in results:
+            accounts.append(account["id"])
+
+        return accounts
+
     def add_account(self, account):
         cursor = self.db.connection.cursor()
         sql = (

@@ -21,9 +21,7 @@ class _TransactionsState extends State<Transactions> {
   }
 
   Future<void> fetchTransactions() async {
-    // TODO: get these account_ids when the user logs in and store them somewhere globally accessible.
-    print("authToken: " + globals.authToken);
-    ServerFacade.getTransactions(globals.account_ids).then((value) {
+    ServerFacade.getTransactions(globals.authToken).then((value) {
       setState(() {
         transactionData = value;
       });
@@ -66,7 +64,7 @@ class _TransactionsState extends State<Transactions> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(transaction["merchant_name"],
+                          Text(transaction["merchant_name"] ?? "",
                               style: const TextStyle(fontSize: 19)),
                           if (transaction["merchant_name"] !=
                               transaction["description"])
@@ -89,7 +87,9 @@ class _TransactionsState extends State<Transactions> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => EditTransactions(transaction: transaction)),
+              MaterialPageRoute(
+                  builder: (context) =>
+                      EditTransactions(transaction: transaction)),
             );
           }),
     );

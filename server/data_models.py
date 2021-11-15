@@ -20,7 +20,7 @@ class SimpleAccount(BaseModel):
 
 
 class GetTransactionRequest(BaseModel):
-    account_ids: list
+    authToken: str
 
 
 class Transaction(BaseModel):

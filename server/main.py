@@ -137,8 +137,15 @@ async def transactions_test():
 
 @app.post("/transactions")
 async def get_transactions(request: data_models.GetTransactionRequest):
+    auth_token_dao = AuthTokenDAO()
+    user_id = auth_token_dao.verify_auth_token(request.authToken)
+
+    # Get list of users accounts
+    dao = AccountDAO()
+    account_ids = dao.get_accounts(user_id)
+
     dao = TransactionDAO()
-    return dao.get_transactions(request.account_ids)
+    return dao.get_transactions(account_ids)
 
 
 @app.post("/transactions/add")

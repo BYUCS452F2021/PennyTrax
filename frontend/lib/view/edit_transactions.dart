@@ -5,13 +5,13 @@ import 'package:intl/intl.dart';
 import 'package:frontend/globals.dart' as globals;
 
 class EditTransactions extends StatefulWidget {
-  const EditTransactions({Key? key, required this.transaction}) : super(key: key);
+  const EditTransactions({Key? key, required this.transaction})
+      : super(key: key);
   final dynamic transaction;
 
   @override
   _EditTransactionsState createState() => _EditTransactionsState();
 }
-
 
 class _EditTransactionsState extends State<EditTransactions> {
   final moneyFormat = new NumberFormat.simpleCurrency();
@@ -24,7 +24,7 @@ class _EditTransactionsState extends State<EditTransactions> {
     print(transaction);
   }
 
-  Future<void> loadTransaction() async {  }
+  Future<void> loadTransaction() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -34,22 +34,15 @@ class _EditTransactionsState extends State<EditTransactions> {
           child: Padding(
               padding: EdgeInsets.all(20),
               child: Column(children: [
-                Text(
-                  moneyFormat.format(this.transaction["amount"]), style: const TextStyle(fontSize: 25)
-                ),
-                Text(
-                  this.transaction["description"],
-                  style: const TextStyle(fontSize: 18, fontStyle: FontStyle.italic)
-                ),
-                Text(
-                  this.transaction["date"],
-                  style: const TextStyle(fontSize: 18)
-                ),
-                Text(
-                  "(account)",
-                  style: const TextStyle(fontSize: 18)
-                ),
-                infoRow("Merchant", this.transaction["merchant_name"]),
+                Text(moneyFormat.format(this.transaction["amount"]),
+                    style: const TextStyle(fontSize: 25)),
+                Text(this.transaction["description"],
+                    style: const TextStyle(
+                        fontSize: 18, fontStyle: FontStyle.italic)),
+                Text(this.transaction["date"],
+                    style: const TextStyle(fontSize: 18)),
+                Text("(account)", style: const TextStyle(fontSize: 18)),
+                infoRow("Merchant", this.transaction["merchant_name"] ?? ""),
                 infoRow("Category", this.transaction["category"]),
                 infoRow("Notes", this.transaction["notes"]),
                 infoRow("Split Transaction", "", button: true),
@@ -58,25 +51,23 @@ class _EditTransactionsState extends State<EditTransactions> {
     );
   }
 
-  Widget infoRow(displayName, value, {button=false}) {
+  Widget infoRow(displayName, value, {button = false}) {
     return Padding(
-      padding: EdgeInsets.all(5),
-      child:
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Divider(),
-              Text(displayName, style: const TextStyle(fontSize: 20)),
-              Text(value, style: const TextStyle(fontSize: 18, fontStyle: FontStyle.italic)),
+        padding: EdgeInsets.all(5),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Divider(),
+            Text(displayName, style: const TextStyle(fontSize: 20)),
+            Text(value,
+                style:
+                    const TextStyle(fontSize: 18, fontStyle: FontStyle.italic)),
           ]),
-          if (button) IconButton(
-            icon: const Icon(CupertinoIcons.chevron_right),
-            onPressed: (){}
-          )
-        ]
-      )
-    );
+          if (button)
+            IconButton(
+                icon: const Icon(CupertinoIcons.chevron_right),
+                onPressed: () {})
+        ]));
   }
 
   Widget transactionRow(transaction) {
@@ -94,7 +85,7 @@ class _EditTransactionsState extends State<EditTransactions> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(transaction["merchant_name"],
+                        Text(transaction["merchant_name"] ?? "",
                             style: const TextStyle(fontSize: 19)),
                         if (transaction["merchant_name"] !=
                             transaction["description"])

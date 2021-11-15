@@ -33,10 +33,11 @@ class ServerFacade {
   static Future<dynamic> loginUser(Map body) async {
     return await postRequest('login/', body);
   }
-  
+
 /* Get all of a users accounts account */
   static Future<dynamic> getAccounts(String authToken) async {
-    var response = await http.get(Uri.parse(serverURL + 'accounts/' + authToken));
+    var response =
+        await http.get(Uri.parse(serverURL + 'accounts/' + authToken));
     return jsonDecode(response.body);
   }
 
@@ -46,10 +47,8 @@ class ServerFacade {
   }
 
   /* Get all of a users accounts account */
-  static Future<dynamic> getTransactions(List account_ids) async {
-    Map body = {
-      "account_ids": account_ids
-    };
+  static Future<dynamic> getTransactions(String authToken) async {
+    Map body = {"authToken": authToken};
     // var response = await http.post(Uri.parse(serverURL + 'transactions'), body);
     var response = await postRequest('transactions', body);
     return response;
