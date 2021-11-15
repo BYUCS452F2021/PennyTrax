@@ -14,6 +14,7 @@ class Account(BaseModel):
 
 
 class SimpleAccount(BaseModel):
+    authToken: str
     name: str
     available_balance: float
     current_balance: float

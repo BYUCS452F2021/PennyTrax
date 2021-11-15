@@ -84,7 +84,33 @@ class AccountDAO:
                 if acc['financial_institution_id'] == ins['id']:
                     ins['accounts'].append(acc)
 
+        # Get Cash Accounts
+        cursor.execute(
+            "SELECT * FROM FinancialAccount WHERE financial_institution_id IS NULL AND user_id=" + str(user_id) + ";")
+        accounts = cursor.fetchall()
+
+        if len(accounts) > 0:
+            cash_accounts = {
+                "financial_institution_name": "Cash Accounts",
+                "accounts": []
+            }
+            for account in accounts:
+                cash_accounts["accounts"].append(account)
+            institutions.append(cash_accounts)
+
         return institutions
+
+    def get_institution_access_tokens(self, user_id):
+        cursor = self.db.connection.cursor(dictionary=True)
+        cursor.execute(
+            "SELECT access_token FROM FinancialInstitution WHERE user_id=" + str(user_id) + ";")
+        results = cursor.fetchall()
+
+        tokens = []
+        for token in results:
+            tokens.append(token["access_token"])
+
+        return tokens
 
     def get_accounts(self, user_id):
         cursor = self.db.connection.cursor(dictionary=True)
@@ -101,8 +127,9 @@ class AccountDAO:
     def add_account(self, account):
         cursor = self.db.connection.cursor()
         sql = (
-            "INSERT INTO User (financial_institution_id, user_id, name, type, subtype, mask, available_balance, current_balance) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)")
-        values = (account["financial_institution_id"],
+            "INSERT INTO FinancialAccount (id, financial_institution_id, user_id, name, type, subtype, mask, available_balance, current_balance) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)")
+        values = (account["id"],
+                  account["financial_institution_id"],
                   account["user_id"],
                   account["name"],
                   account["type"],

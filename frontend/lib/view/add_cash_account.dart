@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:frontend/network/server_facade.dart';
+import 'package:frontend/globals.dart' as globals;
 
 class AddCashAccount extends StatefulWidget {
   const AddCashAccount({Key? key}) : super(key: key);
@@ -133,6 +133,7 @@ class _AddCashAccountState extends State<AddCashAccount> {
       print("Creating cash account...");
 
       Map<String, String> account = {
+        'authToken': globals.authToken,
         'name': accountNameController.text,
         'available_balance': initialBalanceController.text,
         'current_balance': initialBalanceController.text,

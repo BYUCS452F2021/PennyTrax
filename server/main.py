@@ -7,6 +7,7 @@ import data_models
 import plaid
 import link
 import plaid_import
+import uuid
 from DAO import UserDAO, AuthTokenDAO, AccountDAO, TransactionDAO
 # TODO: any time you add new DAO's, edit DAO/__init__.py for cleaner imports.
 
@@ -46,10 +47,23 @@ async def get_accounts(auth_token: str):
 
 
 @app.post("/accounts/add")
-async def add_account(account: data_models.Account):
+async def add_account(request: data_models.SimpleAccount):
+    auth_token_dao = AuthTokenDAO()
+    user_id = auth_token_dao.verify_auth_token(request.authToken)
+
     dao = AccountDAO()
     # TODO: data validation to make sure this account is valid.
-    acct_id = dao.add_account(account)
+    acct_id = dao.add_account({
+        "id": "CASH-" + str(uuid.uuid4()),
+        "financial_institution_id": None,
+        "user_id": user_id,
+        "name": request.name,
+        "type": "",
+        "subtype": "",
+        "mask": "0000",
+        "available_balance": request.available_balance,
+        "current_balance": request.current_balance
+    })
     return {"account_id": acct_id}
 
 """ To test this on the terminal:
@@ -115,7 +129,7 @@ async def link_store_token(data: data_models.PlaidSignInResult):
         data.user_id, financial_institution_id, data.accounts)
 
     # Import account balances and transactions
-    await plaid_import.import_transactions(access_token)
+    await plaid_import.import_transactions(data.user_id)
 
     # Note: use plaid.get_transactions(access_token, start, end)
 
@@ -159,8 +173,8 @@ async def get_transactions(transaction: data_models.Transaction):
 
 @app.post("/transactions/import")
 async def import_transactions():
-    access_token = "access-sandbox-34cbd206-7df6-4721-b5ff-5df4ea57dd94"
-    await plaid_import.import_transactions(access_token)
+    user_id = 125
+    await plaid_import.import_transactions(user_id)
     return {"success": True}
 
 
@@ -223,6 +237,10 @@ async def login(request: data_models.LoginRequest):
         return {"success": False, "message": "Password is incorrect"}
     else:
         auth_token = auth_token_dao.create_auth_token(user["id"])
+
+        # Import plaid data
+        await plaid_import.import_transactions(user["id"])
+
         return {"success": True, "auth_token": auth_token}
 
 
