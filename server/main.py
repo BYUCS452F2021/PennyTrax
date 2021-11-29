@@ -193,9 +193,9 @@ async def get_all_users():
 
 
 @app.get("/users/{user_id}")
-async def get_user(user_id: int):
+async def get_user(user_id: str):
     dao = UserDAO()
-    return dao.get_user(int(user_id))
+    return dao.get_user(user_id)
 
 
 @app.post("/register/")

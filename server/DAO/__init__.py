@@ -1,4 +1,4 @@
 from .mysql import AccountDAO
 from .mysql import AuthTokenDAO
-from .mysql import UserDAO
+from .mongo import UserDAO
 from .mysql import TransactionDAO

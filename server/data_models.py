@@ -45,7 +45,7 @@ class TS(BaseModel):
 
 
 class PlaidSignInResult(BaseModel):
-    user_id: int
+    user_id: str
     name: str
     public_token: str
     accounts: list
