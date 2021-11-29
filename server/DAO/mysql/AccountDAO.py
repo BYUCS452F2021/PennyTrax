@@ -1,6 +1,5 @@
+from mysql_database import MysqlDatabase
 
-
-from database import Database
 dummy_accounts = [
     {
         "financial_institution_name": "Wells Fargo",
@@ -61,7 +60,7 @@ dummy_accounts = [
 
 class AccountDAO:
     def __init__(self):
-        self.db = Database()
+        self.db = MysqlDatabase()
 
     def get_institutions_accounts(self, user_id):
         institutions = []

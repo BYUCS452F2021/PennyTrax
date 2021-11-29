@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import mysql.connector
 
 
-class Database:
+class MysqlDatabase:
     def __init__(self):
         load_dotenv()
         self.connection = mysql.connector.connect(

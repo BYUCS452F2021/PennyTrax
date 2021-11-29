@@ -1,9 +1,9 @@
-from database import Database
+from mysql_database import MysqlDatabase
 
 
 class UserDAO:
     def __init__(self):
-        self.db = Database()
+        self.db = MysqlDatabase()
 
     def create_user(self, user_data):
 

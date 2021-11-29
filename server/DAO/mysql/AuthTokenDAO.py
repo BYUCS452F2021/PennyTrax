@@ -1,13 +1,13 @@
 import uuid
 import datetime
-from database import Database
+from mysql_database import MysqlDatabase
 
 AUTH_TOKEN_DURATION = 1  # in hours
 
 
 class AuthTokenDAO:
     def __init__(self):
-        self.db = Database()
+        self.db = MysqlDatabase()
 
     def create_auth_token(self, user_id):
         new_auth_token = str(uuid.uuid4())

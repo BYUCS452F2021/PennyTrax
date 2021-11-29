@@ -1,9 +1,9 @@
-from database import Database
+from mysql_database import MysqlDatabase
 
 
 class TransactionDAO:
     def __init__(self):
-        self.db = Database()
+        self.db = MysqlDatabase()
 
     # Returns all transactions that have an account_id in the account_ids param
     def get_transactions(self, account_ids: list):
