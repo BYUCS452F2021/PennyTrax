@@ -18,3 +18,25 @@ class MongoDatabase:
 
     def __del__(self):
         self.client.close()
+
+    def clean_id(data, additional_fields=[]):
+        """
+        A helper function to convert the _id ObjectId field to a string called id.
+        Can also do other fields (without renaming) if specified.
+        """
+        if type(data) is list:
+            for d in data:
+                # Switch _id to id
+                d["id"] = str(d["_id"])
+                del d["_id"]
+                # If there are additional fields listed, do those as well
+                if len(additional_fields):
+                    for f in additional_fields:
+                        d[f] = str(d[f])
+        else:
+            data["id"] = str(data["_id"])
+            del data["_id"]
+            # If there are additional fields listed, do those as well
+            if len(additional_fields):
+                for f in additional_fields:
+                    data[f] = str(data[f])
