@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:frontend/globals.dart' as globals;
 import 'package:frontend/view/edit_transactions.dart';
 
+import 'add_transaction.dart';
 import 'login_page.dart';
 
 class Transactions extends StatefulWidget {
@@ -48,6 +49,17 @@ class _TransactionsState extends State<Transactions> {
           },
         ),
         title: const Text('Transactions'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddTransaction()),
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: RefreshIndicator(
