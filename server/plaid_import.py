@@ -15,7 +15,7 @@ async def import_transactions(user_id):
         start = "2021-01-01"
         end = "2021-01-30"
         plaid_trans = await plaid.get_transactions(access_token, start, end)
-        print(plaid_trans)
+        #print(plaid_trans)
 
         # Convert plaid account model to pennytrax model
         accounts = []

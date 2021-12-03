@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 import hashlib
+import asyncio
 import uvicorn
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -238,8 +239,8 @@ async def login(request: data_models.LoginRequest):
     else:
         auth_token = auth_token_dao.create_auth_token(user["id"])
 
-        # Import plaid data
-        await plaid_import.import_transactions(user["id"])
+        # Import plaid data in background
+        asyncio.create_task(plaid_import.import_transactions(user["id"]))
 
         return {"success": True, "auth_token": auth_token}
 
