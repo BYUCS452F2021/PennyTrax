@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:intl/intl.dart';
 import 'package:frontend/globals.dart' as globals;
+import 'package:uuid/uuid.dart';
 
 class AddTransaction extends StatefulWidget {
   const AddTransaction({Key? key}) : super(key: key);
@@ -12,26 +13,39 @@ class AddTransaction extends StatefulWidget {
 }
 
 class _AddTransactionState extends State<AddTransaction> {
-  final moneyFormat = new NumberFormat.simpleCurrency();
-  dynamic transaction;
-
   bool waitingForResonse = false;
   bool _autovalidate = false;
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
   final accountNameController = TextEditingController();
   final dateController = TextEditingController();
-  final initialBalanceController = TextEditingController();
+  final amountController = TextEditingController();
   final merchantNameController = TextEditingController();
   final descriptionController = TextEditingController();
+  final categoryController = TextEditingController();
   final notesController = TextEditingController();
 
-  String dropdownValue = 'One';
+  String accountValue = '';
+  List<dynamic> accounts = [];
 
   @override
   void initState() {
-    dateController.text = DateTime.now().toString().substring(0, 10);
     super.initState();
+    dateController.text = DateTime.now().toString().substring(0, 10);
+
+    // Get list of accounts for dropdown
+    globals.accountData.forEach((institution) {
+      institution["accounts"].forEach((account) {
+        accounts.add({
+          "name": account["name"],
+          "id": account["id"],
+        });
+      });
+    });
+
+    if (accounts.isNotEmpty) {
+      accountValue = accounts.elementAt(0)["id"];
+    }
   }
 
   Future<void> loadTransaction() async {}
@@ -55,6 +69,7 @@ class _AddTransactionState extends State<AddTransaction> {
                   inputAmount,
                   inputTextField("Merchant Name", merchantNameController),
                   inputTextField("Description", descriptionController),
+                  inputTextField("Category", categoryController),
                   inputTextField("Notes", notesController),
                   buttonAddTransaction,
                   loadingIndicator,
@@ -63,16 +78,6 @@ class _AddTransactionState extends State<AddTransaction> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget get textDescription {
-    return const Padding(
-      padding: EdgeInsets.only(top: 50, bottom: 50),
-      child: Text(
-        "A cash account allows you to keep track of cash you have or an account you have that isn't in under a supported institution.",
-        textAlign: TextAlign.center,
       ),
     );
   }
@@ -87,7 +92,7 @@ class _AddTransactionState extends State<AddTransaction> {
           contentPadding: EdgeInsets.all(10),
         ),
         child: DropdownButton<String>(
-          value: dropdownValue,
+          value: accountValue,
           icon: const Icon(Icons.arrow_downward),
           hint: const Text("Account"),
           iconSize: 24,
@@ -95,14 +100,13 @@ class _AddTransactionState extends State<AddTransaction> {
           isExpanded: true,
           onChanged: (String? newValue) {
             setState(() {
-              dropdownValue = newValue!;
+              accountValue = newValue!;
             });
           },
-          items: <String>['One', 'Two', 'Free', 'Four']
-              .map<DropdownMenuItem<String>>((String value) {
+          items: accounts.map<DropdownMenuItem<String>>((account) {
             return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
+              value: account["id"],
+              child: Text(account["name"]),
             );
           }).toList(),
         ),
@@ -131,8 +135,8 @@ class _AddTransactionState extends State<AddTransaction> {
         inputFormatters: [
           WhitelistingTextInputFormatter(RegExp(r"^\d+\.?\d{0,2}"))
         ],
-        validator: validateInitialBalance,
-        controller: initialBalanceController,
+        validator: validateAmount,
+        controller: amountController,
       ),
     );
   }
@@ -155,6 +159,13 @@ class _AddTransactionState extends State<AddTransaction> {
                 2000), //DateTime.now() - not to allow to choose before today.
             lastDate: DateTime(2101),
           );
+          if (pickedDate != null) {
+            //pickedDate output format => 2021-03-10 00:00:00.000
+            String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+            setState(() {
+              dateController.text = formattedDate;
+            });
+          }
         },
       ),
     );
@@ -181,16 +192,8 @@ class _AddTransactionState extends State<AddTransaction> {
     return waitingForResonse ? const CircularProgressIndicator() : Container();
   }
 
-  String? validateTextField(String? input) {
-    return input != null && input.trim().isNotEmpty
-        ? null
-        : "Please enter an input";
-  }
-
-  String? validateInitialBalance(String? input) {
-    return input != null && input.isNotEmpty
-        ? null
-        : "Please enter an initial balance";
+  String? validateAmount(String? input) {
+    return input != null && input.isNotEmpty ? null : "Please enter an amount";
   }
 
   void addTransaction() {
@@ -200,19 +203,27 @@ class _AddTransactionState extends State<AddTransaction> {
       waitingForResonse = true;
       print("Adding transaction...");
 
-      // Map<String, String> account = {
-      //   'authToken': globals.authToken,
-      //   'name': accountNameController.text,
-      //   'available_balance': initialBalanceController.text,
-      //   'current_balance': initialBalanceController.text,
-      // };
+      Map<String, String> transaction = {
+        'id': Uuid().v4(),
+        'account_id': accountValue,
+        'date': dateController.text,
+        'amount': amountController.text,
+        'pending': "0",
+        'merchant_name': merchantNameController.text,
+        'description': descriptionController.text,
+        'category': categoryController.text,
+        'notes': notesController.text,
+        'split': "0",
+        'parent_transaction_id': "null",
+        'hidden_from_budget': "0",
+      };
 
-      // ServerFacade.addCashAccount(account).then((value) {
-      //   print("Cash account created!");
-      //   Navigator.pop(context);
-      // }, onError: (error) {
-      //   print(error);
-      // });
+      ServerFacade.addTransaction(transaction).then((value) {
+        print("Transaction added!");
+        Navigator.pop(context);
+      }, onError: (error) {
+        print(error);
+      });
     }
   }
 }

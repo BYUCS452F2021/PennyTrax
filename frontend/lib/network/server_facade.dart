@@ -60,6 +60,11 @@ class ServerFacade {
     return response;
   }
 
+  /* Add a transaction */
+  static Future<dynamic> addTransaction(Map body) async {
+    return await postRequest('transactions/add', body);
+  }
+
   /* Create post request */
   static Future<dynamic> postRequest(String endpoint, Map body) async {
     return await http.post(

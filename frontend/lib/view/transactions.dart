@@ -15,7 +15,6 @@ class Transactions extends StatefulWidget {
 
 class _TransactionsState extends State<Transactions> {
   final moneyFormat = new NumberFormat.simpleCurrency();
-  List<dynamic> transactionData = [];
 
   @override
   void initState() {
@@ -26,7 +25,7 @@ class _TransactionsState extends State<Transactions> {
   Future<void> fetchTransactions() async {
     ServerFacade.getTransactions(globals.authToken).then((value) {
       setState(() {
-        transactionData = value;
+        globals.transactionData = value;
       });
     }, onError: (error) {
       print(error);
@@ -64,9 +63,9 @@ class _TransactionsState extends State<Transactions> {
       body: Center(
         child: RefreshIndicator(
           child: ListView.builder(
-            itemCount: transactionData.length,
+            itemCount: globals.transactionData.length,
             itemBuilder: (context, index) {
-              return transactionRow(transactionData[index]);
+              return transactionRow(globals.transactionData[index]);
             },
           ),
           onRefresh: fetchTransactions,

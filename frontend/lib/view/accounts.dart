@@ -16,8 +16,6 @@ class _AccountsState extends State<Accounts> {
   static const int ADD_FINANCIAL_INSTITUTION_OPTION = 0;
   static const int ADD_CASH_ACCOUNT_OPTION = 1;
 
-  List<dynamic> accountData = [];
-
   @override
   void initState() {
     super.initState();
@@ -27,7 +25,7 @@ class _AccountsState extends State<Accounts> {
   Future<void> fetchAccounts() async {
     ServerFacade.getAccounts(globals.authToken).then((value) {
       setState(() {
-        accountData = value;
+        globals.accountData = value;
       });
     }, onError: (error) {
       print(error);
@@ -70,9 +68,9 @@ class _AccountsState extends State<Accounts> {
       body: Center(
         child: RefreshIndicator(
           child: ListView.builder(
-            itemCount: accountData.length,
+            itemCount: globals.accountData.length,
             itemBuilder: (context, index) {
-              return institutionCard(accountData[index]);
+              return institutionCard(globals.accountData[index]);
             },
           ),
           onRefresh: fetchAccounts,
