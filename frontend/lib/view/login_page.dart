@@ -120,8 +120,9 @@ class _LoginPageState extends State<LoginPage> {
             webPosition: 'center');
       } else {
         print("User logged in!");
+        emailController.text = "";
+        passwordController.text = "";
         globals.authToken = response["auth_token"];
-        print(globals.authToken);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => AppNavigation()),

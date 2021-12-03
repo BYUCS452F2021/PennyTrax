@@ -172,6 +172,14 @@ async def get_transactions(transaction: data_models.Transaction):
     return {"success": True}
 
 
+@app.delete("/transactions/delete/{transaction_id}")
+async def delete_transaction(transaction_id: str):
+    dao = TransactionDAO()
+    # TODO: data validation to make sure this account is valid.
+    dao.delete_transaction(transaction_id)
+    return {"success": True}
+
+
 @app.post("/transactions/import")
 async def import_transactions():
     user_id = 125

@@ -29,7 +29,25 @@ class _EditTransactionsState extends State<EditTransactions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Transaction Details')),
+      appBar: AppBar(
+        title: const Text('Transaction Details'),
+        actions: globals.accountData.isNotEmpty
+            ? <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    ServerFacade.deleteTransaction(transaction["id"]).then(
+                        (value) {
+                      print("Transaction deleted!");
+                      Navigator.pop(context);
+                    }, onError: (error) {
+                      print(error);
+                    });
+                  },
+                ),
+              ]
+            : null,
+      ),
       body: Center(
           child: Padding(
               padding: EdgeInsets.all(20),

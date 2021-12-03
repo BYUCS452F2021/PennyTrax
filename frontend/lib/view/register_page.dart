@@ -165,7 +165,10 @@ class _RegisterPageState extends State<RegisterPage> {
       } else {
         print("User registered!");
         globals.authToken = response["auth_token"];
-        print(globals.authToken);
+        firstNameController.text = "";
+        lastNameController.text = "";
+        emailController.text = "";
+        passwordController.text = "";
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => AppNavigation()),

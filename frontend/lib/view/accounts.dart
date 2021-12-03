@@ -86,12 +86,16 @@ class _AccountsState extends State<Accounts> {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const AddInstitution()),
-      );
+      ).then((value) {
+        fetchAccounts();
+      });
     } else if (selected == ADD_CASH_ACCOUNT_OPTION) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const AddCashAccount()),
-      );
+      ).then((value) {
+        fetchAccounts();
+      });
     }
   }
 

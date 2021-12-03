@@ -101,6 +101,13 @@ class TransactionDAO:
         self.db.connection.commit()
         cursor.close()
 
+    def delete_transaction(self, transaction_id):
+        cursor = self.db.connection.cursor()
+        cursor.execute("DELETE FROM Transaction WHERE id='" +
+                       str(transaction_id) + "';")
+        self.db.connection.commit()
+        cursor.close()
+
 
 dummy_transactions = [
     {

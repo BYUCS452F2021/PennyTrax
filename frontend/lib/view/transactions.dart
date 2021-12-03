@@ -121,7 +121,9 @@ class _TransactionsState extends State<Transactions> {
               MaterialPageRoute(
                   builder: (context) =>
                       EditTransactions(transaction: transaction)),
-            );
+            ).then((value) {
+              fetchTransactions();
+            });
           }),
     );
   }

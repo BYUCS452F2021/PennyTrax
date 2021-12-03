@@ -65,6 +65,13 @@ class ServerFacade {
     return await postRequest('transactions/add', body);
   }
 
+  /* Delete a transaction */
+  static Future<dynamic> deleteTransaction(String transactionId) async {
+    var response = await http
+        .delete(Uri.parse(serverURL + 'transactions/delete/' + transactionId));
+    return jsonDecode(response.body);
+  }
+
   /* Create post request */
   static Future<dynamic> postRequest(String endpoint, Map body) async {
     return await http.post(
