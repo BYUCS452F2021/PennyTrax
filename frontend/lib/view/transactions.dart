@@ -40,6 +40,8 @@ class _TransactionsState extends State<Transactions> {
           icon: const Icon(Icons.logout),
           onPressed: () {
             globals.authToken = "";
+            globals.accountData = [];
+            globals.transactionData = [];
             print("User logged out!");
             Navigator.pushReplacement(
               context,
@@ -48,17 +50,20 @@ class _TransactionsState extends State<Transactions> {
           },
         ),
         title: const Text('Transactions'),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AddTransaction()),
-              );
-            },
-          ),
-        ],
+        actions: globals.accountData.isNotEmpty
+            ? <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AddTransaction()),
+                    );
+                  },
+                ),
+              ]
+            : null,
       ),
       body: Center(
         child: RefreshIndicator(

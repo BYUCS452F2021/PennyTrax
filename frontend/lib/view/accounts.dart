@@ -40,6 +40,8 @@ class _AccountsState extends State<Accounts> {
           icon: const Icon(Icons.logout),
           onPressed: () {
             globals.authToken = "";
+            globals.accountData = [];
+            globals.transactionData = [];
             print("User logged out!");
             Navigator.pushReplacement(
               context,

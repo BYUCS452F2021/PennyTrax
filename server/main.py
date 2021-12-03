@@ -240,7 +240,7 @@ async def login(request: data_models.LoginRequest):
         auth_token = auth_token_dao.create_auth_token(user["id"])
 
         # Import plaid data in background
-        # asyncio.create_task(plaid_import.import_transactions(user["id"])) // TODO: Uncomment
+        asyncio.create_task(plaid_import.import_transactions(user["id"]))
 
         return {"success": True, "auth_token": auth_token}
 
