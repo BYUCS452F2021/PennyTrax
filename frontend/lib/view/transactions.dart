@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:frontend/globals.dart' as globals;
 import 'package:frontend/view/edit_transactions.dart';
 
+import 'login_page.dart';
+
 class Transactions extends StatefulWidget {
   const Transactions({Key? key}) : super(key: key);
   @override
@@ -33,7 +35,20 @@ class _TransactionsState extends State<Transactions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Transactions')),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () {
+            globals.authToken = "";
+            print("User logged out!");
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+          },
+        ),
+        title: const Text('Transactions'),
+      ),
       body: Center(
         child: RefreshIndicator(
           child: ListView.builder(

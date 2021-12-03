@@ -3,6 +3,7 @@ import 'package:frontend/network/server_facade.dart';
 import 'package:frontend/view/add_cash_account.dart';
 import 'package:frontend/view/add_institution.dart';
 import 'package:frontend/globals.dart' as globals;
+import 'login_page.dart';
 
 class Accounts extends StatefulWidget {
   const Accounts({Key? key}) : super(key: key);
@@ -37,6 +38,17 @@ class _AccountsState extends State<Accounts> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () {
+            globals.authToken = "";
+            print("User logged out!");
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+          },
+        ),
         title: const Text('Accounts'),
         actions: <Widget>[
           PopupMenuButton(
