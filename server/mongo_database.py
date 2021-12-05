@@ -16,7 +16,7 @@ class MongoDatabase:
 
         self.db = self.client[mongoDatabase]
 
-    def __del__(self):
+    def __del__a(self):
         self.client.close()
 
     def clean_id(data, additional_fields=[]):
@@ -32,11 +32,13 @@ class MongoDatabase:
                 # If there are additional fields listed, do those as well
                 if len(additional_fields):
                     for f in additional_fields:
-                        d[f] = str(d[f])
+                        if f in d:
+                            d[f] = str(d[f])
         else:
             data["id"] = str(data["_id"])
             del data["_id"]
             # If there are additional fields listed, do those as well
             if len(additional_fields):
                 for f in additional_fields:
-                    data[f] = str(data[f])
+                    if f in data:
+                        data[f] = str(data[f])
