@@ -16,7 +16,7 @@ class MongoDatabase:
 
         self.db = self.client[mongoDatabase]
 
-    def __del__a(self):
+    def __del__(self):
         self.client.close()
 
     def clean_id(data, additional_fields=[]):
