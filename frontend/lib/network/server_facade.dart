@@ -65,6 +65,11 @@ class ServerFacade {
     return await postRequest('transactions/add', body);
   }
 
+  /* Add a transaction */
+  static Future<dynamic> updateTransaction(Map body) async {
+    return await postRequest('transactions/update', body);
+  }
+
   /* Delete a transaction */
   static Future<dynamic> deleteTransaction(String transactionId) async {
     var response = await http

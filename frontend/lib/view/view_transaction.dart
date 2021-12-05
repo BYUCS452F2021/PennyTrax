@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:intl/intl.dart';
 import 'package:frontend/globals.dart' as globals;
+import 'add_edit_transaction.dart';
 
-class EditTransactions extends StatefulWidget {
-  const EditTransactions({Key? key, required this.transaction})
+class ViewTransaction extends StatefulWidget {
+  const ViewTransaction({Key? key, required this.transaction})
       : super(key: key);
   final dynamic transaction;
 
   @override
-  _EditTransactionsState createState() => _EditTransactionsState();
+  _ViewTransactionState createState() => _ViewTransactionState();
 }
 
-class _EditTransactionsState extends State<EditTransactions> {
+class _ViewTransactionState extends State<ViewTransaction> {
   final moneyFormat = new NumberFormat.simpleCurrency();
   dynamic transaction;
 
@@ -25,6 +26,15 @@ class _EditTransactionsState extends State<EditTransactions> {
   }
 
   Future<void> loadTransaction() async {}
+
+  void editTransaction() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              AddEditTransaction(transaction: transaction)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,12 +74,13 @@ class _EditTransactionsState extends State<EditTransactions> {
                 infoRow("Category", this.transaction["category"]),
                 infoRow("Notes", this.transaction["notes"]),
                 infoRow("Split Transaction", "", button: true),
+                infoRow("Edit Transaction", "", button: true, action: editTransaction),
                 Divider()
               ]))),
     );
   }
 
-  Widget infoRow(displayName, value, {button = false}) {
+  Widget infoRow(displayName, value, {button = false, action = null}) {
     return Padding(
         padding: EdgeInsets.all(5),
         child:
@@ -84,7 +95,7 @@ class _EditTransactionsState extends State<EditTransactions> {
           if (button)
             IconButton(
                 icon: const Icon(CupertinoIcons.chevron_right),
-                onPressed: () {})
+                onPressed: () {action();})
         ]));
   }
 

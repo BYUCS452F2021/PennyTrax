@@ -6,13 +6,14 @@ import 'package:intl/intl.dart';
 import 'package:frontend/globals.dart' as globals;
 import 'package:uuid/uuid.dart';
 
-class AddTransaction extends StatefulWidget {
-  const AddTransaction({Key? key}) : super(key: key);
+class AddEditTransaction extends StatefulWidget {
+  const AddEditTransaction({Key? key, this.transaction}) : super(key: key);
+  final dynamic transaction;
   @override
-  _AddTransactionState createState() => _AddTransactionState();
+  _AddEditTransactionState createState() => _AddEditTransactionState();
 }
 
-class _AddTransactionState extends State<AddTransaction> {
+class _AddEditTransactionState extends State<AddEditTransaction> {
   bool waitingForResonse = false;
   bool _autovalidate = false;
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
@@ -27,11 +28,29 @@ class _AddTransactionState extends State<AddTransaction> {
 
   String accountValue = '';
   List<dynamic> accounts = [];
+  dynamic originalTransaction;
+  bool editMode = false;
 
   @override
   void initState() {
     super.initState();
-    dateController.text = DateTime.now().toString().substring(0, 10);
+    originalTransaction = this.widget.transaction;
+    editMode = originalTransaction != null;
+    if (editMode) {
+      // Editing an existing transaction
+      // We should fill in the input fields
+      dateController.text = originalTransaction["date"];
+      amountController.text = originalTransaction["amount"].toString();
+      merchantNameController.text = originalTransaction["merchant_name"];
+      descriptionController.text = originalTransaction["description"];
+      categoryController.text = originalTransaction["category"];
+      notesController.text = originalTransaction["notes"];
+    }
+    else {
+      // Adding a new transaction
+      // Fill in default values
+      dateController.text = DateTime.now().toString().substring(0, 10);
+    }
 
     // Get list of accounts for dropdown
     globals.accountData.forEach((institution) {
@@ -53,7 +72,7 @@ class _AddTransactionState extends State<AddTransaction> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Transaction')),
+      appBar: AppBar(title: Text((editMode ? 'Edit' : 'Add') + ' Transaction')),
       body: Center(
         child: Form(
           key: _key,
@@ -177,7 +196,7 @@ class _AddTransactionState extends State<AddTransaction> {
       child: ButtonTheme(
         height: 40,
         child: RaisedButton(
-          child: const Text('Add Transaction',
+          child: Text((editMode ? 'Save' : 'Add') + ' Transaction',
               style: TextStyle(color: Colors.white, fontSize: 15)),
           color: Colors.black87,
           shape:
@@ -201,7 +220,6 @@ class _AddTransactionState extends State<AddTransaction> {
     if (_key.currentState!.validate()) {
       _key.currentState!.save();
       waitingForResonse = true;
-      print("Adding transaction...");
 
       Map<String, String> transaction = {
         'id': Uuid().v4(),
@@ -218,12 +236,28 @@ class _AddTransactionState extends State<AddTransaction> {
         'hidden_from_budget': "0",
       };
 
-      ServerFacade.addTransaction(transaction).then((value) {
-        print("Transaction added!");
-        Navigator.pop(context);
-      }, onError: (error) {
-        print(error);
-      });
+      if (editMode) {
+        // Perform network request to EDIT transaction
+        transaction["id"] = originalTransaction["id"];
+        print("Editing transaction...");
+        ServerFacade.updateTransaction(transaction).then((value) {
+          print("Transaction updated!");
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }, onError: (error) {
+          print(error);
+        });
+      }
+      else {
+        // Perform network request to ADD transaction
+        print("Adding transaction...");
+        ServerFacade.addTransaction(transaction).then((value) {
+          print("Transaction added!");
+          Navigator.pop(context);
+        }, onError: (error) {
+          print(error);
+        });
+      }
     }
   }
 }

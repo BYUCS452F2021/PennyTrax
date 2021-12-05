@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:frontend/network/server_facade.dart';
 import 'package:intl/intl.dart';
 import 'package:frontend/globals.dart' as globals;
-import 'package:frontend/view/edit_transactions.dart';
+import 'package:frontend/view/view_transaction.dart';
 
-import 'add_transaction.dart';
+import 'add_edit_transaction.dart';
 import 'login_page.dart';
 
 class Transactions extends StatefulWidget {
@@ -58,7 +58,7 @@ class _TransactionsState extends State<Transactions> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const AddTransaction()),
+                          builder: (context) => const AddEditTransaction()),
                     );
                   },
                 ),
@@ -120,7 +120,7 @@ class _TransactionsState extends State<Transactions> {
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      EditTransactions(transaction: transaction)),
+                      ViewTransaction(transaction: transaction)),
             ).then((value) {
               fetchTransactions();
             });
