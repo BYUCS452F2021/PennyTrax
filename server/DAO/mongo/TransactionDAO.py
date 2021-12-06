@@ -28,4 +28,29 @@ class TransactionDAO:
         return str(result.inserted_ids)
 
     def update_transaction(self, transaction):
-        pass
+        filter = {'id': transaction.id}
+        newvalues = {"$set": {'date': transaction.date,
+                              "amount": transaction.amount,
+                              "pending": int(transaction.pending),
+                              "merchant_name": transaction.merchant_name,
+                              "description": transaction.description,
+                              "category": transaction.category,
+                              "notes": transaction.notes,
+                              "split": int(transaction.split),
+                              "parent_transaction_id": transaction.parent_transaction_id,
+                              "hidden_from_budget": transaction.hidden_from_budget
+                              }}
+
+        transaction.date,
+        transaction.amount,
+        int(transaction.pending),
+        transaction.merchant_name,
+        transaction.description,
+        transaction.category,
+        transaction.notes,
+        int(transaction.split),
+        transaction.parent_transaction_id,
+        int(transaction.hidden_from_budget)
+
+    def delete_transaction(self, transaction_id):
+        self.db.Transaction.delete_one({"transaction_id": transaction_id})
